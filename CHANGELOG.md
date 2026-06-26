@@ -7,6 +7,7 @@
 ### Changed
 - Sync bundled iOS JL OTA frameworks with the official `JL_OTA_Flutter` package: `JL_OTALib 2.3.1`, `JL_BLEKit 1.13.0`, `JL_AdvParse 1.1.1`, and `JL_HashPair 1.0.2`.
 - Keep Android on the local newer `jl_bt_ota_V1.10.0_10932` AAR while adding official-inspired native methods.
+- Redesign the package documentation in English and remove Chinese comments from the public plugin source.
 
 ### Fixed
 - Register the iOS OTA progress callback before starting an update.
