@@ -3,7 +3,6 @@
 //  MusicTest
 //
 //  Created by DFung on 2018/3/30.
-//  Copyright © 2018年 DFung. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

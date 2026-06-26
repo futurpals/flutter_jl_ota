@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * 发送BLE数据线程
+ * BLE data sending thread.
  *
  * @author zqjasonZhong
  * @date 2019/10/8
@@ -158,9 +158,9 @@ public class SendBleDataThread extends Thread {
                                 mCurrentTask.setStatus(-1);
                             }
                             JL_Log.d(TAG, "data send ret :" + mCurrentTask.getStatus());
-                            if (mCurrentTask.getStatus() != BluetoothGatt.GATT_SUCCESS) { //发送失败
+                            if (mCurrentTask.getStatus() != BluetoothGatt.GATT_SUCCESS) { // Send failed.
                                 retryNum++;
-                                if (retryNum >= 3) { //重发次数超过限制
+                                if (retryNum >= 3) { // Retry limit exceeded.
                                     callbackResult(mCurrentTask, false);
                                     mQueue.clear();
                                 } else {
@@ -174,7 +174,7 @@ public class SendBleDataThread extends Thread {
                                     }
                                     continue;
                                 }
-                            } else { //发送成功
+                            } else { // Send succeeded.
                                 callbackResult(mCurrentTask, true);
                             }
                         }

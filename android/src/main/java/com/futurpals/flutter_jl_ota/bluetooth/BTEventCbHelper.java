@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author zqjasonZhong
  * @since 2022/9/14
  * @email zhongzhuocheng@zh-jieli.com
- * @desc 蓝牙事件回调辅助类
+ * @desc Bluetooth event callback helper.
  */
 public class BTEventCbHelper extends OnBTEventCallback {
     private final List<OnBTEventCallback> callbacks = new ArrayList<>();

@@ -72,7 +72,7 @@
         }
     } else if ([@"cancelOtaUpdate" isEqualToString:call.method]) {
         [[OtaTool sharedInstance] cancelOtaUpdate:^(uint8_t status) {
-            result(@(status == 0)); // 假设 status == 0 表示成功
+            result(@(status == 0)); // status == 0 indicates success.
         }];
     } else {
         result(FlutterMethodNotImplemented);

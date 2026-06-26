@@ -11,28 +11,26 @@ class PermissionUtil {
     if (await _checkAllPermissionsStatus(permissions)) {
       onAllowed(true);
     } else {
-      // onAllowed(false);
       newRequestPermissions(permissions, onAllowed);
-
-      // CommonToast.showToast("尚未授权的权限有：${permissions}.");
     }
   }
 
-  // 权限名称映射
+  // Permission display names used by example logs.
   static String _getPermissionName(Permission permission) {
     Map<Permission, String> permissionNames = {
-      Permission.bluetooth: "蓝牙",
-      Permission.location: "位置信息",
-      Permission.locationAlways: "始终位置信息",
-      Permission.microphone: "麦克风权限",
-      Permission.storage: "存储权限",
-      Permission.mediaLibrary: "访问媒体权限",
+      Permission.bluetooth: 'Bluetooth',
+      Permission.location: 'Location',
+      Permission.locationAlways: 'Always-on location',
+      Permission.microphone: 'Microphone',
+      Permission.storage: 'Storage',
+      Permission.mediaLibrary: 'Media library',
     };
-    return permissionNames[permission] ?? "未知权限";
+    return permissionNames[permission] ?? 'Unknown permission';
   }
 
   static Future<bool> _checkAllPermissionsStatus(
-      List<Permission> permissions) async {
+    List<Permission> permissions,
+  ) async {
     bool status = true;
     for (var permission in permissions) {
       var permissionStatus = await permission.status;
@@ -45,24 +43,32 @@ class PermissionUtil {
   }
 
   static Future newRequestPermissions(
-      List<Permission> permissions, PermissionUtilOnAllowedCB onAllowed) async {
+    List<Permission> permissions,
+    PermissionUtilOnAllowedCB onAllowed,
+  ) async {
     var statuses = await permissions.request();
-    bool allPermissionsGranted =
-        statuses.values.every((status) => status.isGranted);
+    bool allPermissionsGranted = statuses.values.every(
+      (status) => status.isGranted,
+    );
 
-    // 调用回调，通知调用方权限请求结果
+    // Notify the caller with the permission request result.
     onAllowed(allPermissionsGranted);
 
     if (allPermissionsGranted) {
-      debugPrint("通过的权限有：${permissions.map(_getPermissionName)}.");
+      debugPrint(
+        'Granted permissions: ${permissions.map(_getPermissionName)}.',
+      );
     } else {
       debugPrint(
-          "拒绝的权限有：${statuses.entries.where((entry) => !entry.value.isGranted).map((entry) => _getPermissionName(entry.key)).toList()}.");
+        'Denied permissions: ${statuses.entries.where((entry) => !entry.value.isGranted).map((entry) => _getPermissionName(entry.key)).toList()}.',
+      );
     }
   }
 
   static Future _requestPermissions(
-      List<Permission> permissions, PermissionUtilOnAllowedCB onAllowed) async {
+    List<Permission> permissions,
+    PermissionUtilOnAllowedCB onAllowed,
+  ) async {
     List<Future> requests = [];
     for (var permission in permissions) {
       if (await permission.status.isDenied) {
@@ -71,20 +77,22 @@ class PermissionUtil {
       }
     }
 
-    //等待请求完毕
+    // Wait until every permission request completes.
     await Future.wait(requests);
     if (await _checkAllPermissionsStatus(permissions)) {
       onAllowed(true);
-      debugPrint("通过的权限有：$permissions.");
+      debugPrint('Granted permissions: $permissions.');
     } else {
       onAllowed(false);
-      debugPrint("拒绝的权限有：$permissions.");
+      debugPrint('Denied permissions: $permissions.');
     }
   }
 
-  /// 判断权限
+  /// Requests permissions and returns the aggregate result through [onAllowed].
   static Future snRequestPermissions(
-      List<Permission> permissions, PermissionUtilOnAllowedCB onAllowed) async {
+    List<Permission> permissions,
+    PermissionUtilOnAllowedCB onAllowed,
+  ) async {
     _requestPermissions(permissions, onAllowed);
   }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Ble事件回调
+ * BLE event callback.
  *
  * @author zqjasonZhong
  * @since 2020/7/16
@@ -18,92 +18,92 @@ import java.util.UUID;
 public interface IBleEventCallback {
 
     /**
-     * 蓝牙适配器开关回调
+     * Bluetooth adapter state callback.
      *
-     * @param bEnabled 开关
+     * @param bEnabled Enabled state.
      */
     void onAdapterChange(boolean bEnabled);
 
     /**
-     * 搜索蓝牙设备的状态回调
+     * Bluetooth scan state callback.
      *
-     * @param bStart 搜索状态
+     * @param bStart Scan state.
      */
     void onDiscoveryBleChange(boolean bStart);
 
     /**
-     * 发现蓝牙设备的回调
+     * Bluetooth device discovery callback.
      *
-     * @param device      蓝牙设备对象
-     * @param bleScanInfo BLE扫描数据
+     * @param device      Bluetooth device.
+     * @param bleScanInfo BLE scan data.
      */
     void onDiscoveryBle(BluetoothDevice device, BleScanInfo bleScanInfo);
 
     /**
-     * BLE连接状态回调
+     * BLE connection state callback.
      *
-     * @param device 蓝牙设备对象
-     * @param status 连接状态
+     * @param device Bluetooth device.
+     * @param status Connection state.
      */
     void onBleConnection(BluetoothDevice device, int status);
 
     /**
-     * BLE服务发现回调
+     * BLE service discovery callback.
      *
-     * @param device   蓝牙设备对象
-     * @param status   状态
-     * @param services 服务列表
+     * @param device   Bluetooth device.
+     * @param status   Status.
+     * @param services Service list.
      */
     void onBleServiceDiscovery(BluetoothDevice device, int status, List<BluetoothGattService> services);
 
     /**
-     * BLE特征状态回调
+     * BLE characteristic state callback.
      *
-     * @param device             蓝牙设备对象
-     * @param serviceUuid        服务UUID
-     * @param characteristicUuid 特征值UUID
-     * @param status             状态
+     * @param device             Bluetooth device.
+     * @param serviceUuid        Service UUID.
+     * @param characteristicUuid Characteristic UUID.
+     * @param status             Status.
      */
     void onBleNotificationStatus(BluetoothDevice device, UUID serviceUuid, UUID characteristicUuid, int status);
 
     /**
-     * BLE MTU改变回调
+     * BLE MTU change callback.
      *
-     * @param device 蓝牙设备对象
-     * @param block  协商后的MTU
-     * @param status 状态
+     * @param device Bluetooth device.
+     * @param block  Negotiated MTU.
+     * @param status Status.
      */
     void onBleDataBlockChanged(BluetoothDevice device, int block, int status);
 
     /**
-     * BLE数据回调
+     * BLE data callback.
      *
-     * @param device              蓝牙设备对象
-     * @param serviceUuid         服务UUID
-     * @param characteristicsUuid 特征值UUID
-     * @param data                数据
+     * @param device              Bluetooth device.
+     * @param serviceUuid         Service UUID.
+     * @param characteristicsUuid Characteristic UUID.
+     * @param data                Data.
      */
     void onBleDataNotification(BluetoothDevice device, UUID serviceUuid, UUID characteristicsUuid, byte[] data);
 
     /**
-     * BLE 写数据回调
+     * BLE write callback.
      *
-     * @param device              蓝牙设备对象
-     * @param serviceUuid         服务UUID
-     * @param characteristicsUuid 特征值UUID
-     * @param data                数据
-     * @param status              状态
+     * @param device              Bluetooth device.
+     * @param serviceUuid         Service UUID.
+     * @param characteristicsUuid Characteristic UUID.
+     * @param data                Data.
+     * @param status              Status.
      */
     void onBleWriteStatus(BluetoothDevice device, UUID serviceUuid, UUID characteristicsUuid, byte[] data, int status);
 
     /**
-     * BLE 连接参数回调
+     * BLE connection parameter callback.
      *
-     * @param device   蓝牙设备对象
-     * @param interval 发数间隔
-     * @param latency  延时参数
-     * @param timeout  超时时间
-     * @param status   状态
+     * @param device   Bluetooth device.
+     * @param interval Packet interval.
+     * @param latency  Latency parameter.
+     * @param timeout  Timeout.
+     * @param status   Status.
      */
     void onConnectionUpdated(BluetoothDevice device, int interval, int latency, int timeout, int status);
 }

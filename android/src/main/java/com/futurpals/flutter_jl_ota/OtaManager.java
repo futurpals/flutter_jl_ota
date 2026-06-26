@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class OtaManager extends BluetoothOTAManager {
     private static final String TAG = "OtaManager";
-    private static final long SCAN_TIMEOUT = 20 * 1000L; // 20秒扫描超时
+    private static final long SCAN_TIMEOUT = 20 * 1000L; // 20-second scan timeout.
 
     private final Context context;
     private final BleManager bleManager;
@@ -37,14 +37,14 @@ public class OtaManager extends BluetoothOTAManager {
         this.bleManager = new BleManager(context, mac, this.deviceName);
         Log.d(TAG, "Initialized with mac: " + mac + ", deviceName: " + deviceName);
 
-        // 启动扫描
+        // Start scanning.
         startLeScan(SCAN_TIMEOUT);
 
-        // 注册 BLE 事件回调
+        // Register BLE event callbacks.
         registerBleEventCallback();
     }
 
-    // 启动 BLE 扫描
+    // Starts BLE scanning.
     public void startLeScan(long timeout) {
         try {
             bleManager.startLeScan(timeout);
@@ -63,7 +63,7 @@ public class OtaManager extends BluetoothOTAManager {
         }
     }
 
-    // 注册 BLE 事件回调
+    // Registers BLE event callbacks.
     private void registerBleEventCallback() {
         bleManager.registerBleEventCallback(new BleEventCallback() {
             @Override
@@ -71,10 +71,10 @@ public class OtaManager extends BluetoothOTAManager {
                 int connectStatus = changeConnectStatus(status);
                 JL_Log.d(TAG, "onBleConnection - device: " + device.getAddress() + ", status: " + connectStatus);
 
-                // 传递设备连接状态
+                // Forward the device connection state to the OTA SDK.
                 onBtDeviceConnection(device, connectStatus);
 
-                // 更新 OTA 可开始状态
+                // Update whether OTA can start.
                 if (connectStatus == StateCode.CONNECTION_OK) {
                     setCanStartOta(true);
                 } else if (connectStatus == StateCode.CONNECTION_DISCONNECT) {
@@ -96,7 +96,7 @@ public class OtaManager extends BluetoothOTAManager {
         });
     }
 
-    // 设置 OTA 可开始状态
+    // Sets whether OTA can start.
     private void setCanStartOta(boolean canStart) {
         if (this.canStartOta != canStart) {
             this.canStartOta = canStart;
@@ -107,10 +107,10 @@ public class OtaManager extends BluetoothOTAManager {
         }
     }
 
-    // 设置 OTA 状态回调
+    // Sets the OTA state callback.
     public void setOtaStatusCallback(OtaStatusCallback callback) {
         this.otaStatusCallback = callback;
-        // 初始化时立即通知当前状态
+        // Immediately report the current state.
         if (callback != null) {
             callback.onCanStartOtaChanged(canStartOta);
         }

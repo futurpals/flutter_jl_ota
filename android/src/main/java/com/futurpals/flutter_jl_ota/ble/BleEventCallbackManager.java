@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Ble事件回调管理器
+ * BLE event callback manager.
  *
  * @author zqjasonZhong
  * @since 2020/12/24
  */
 public class BleEventCallbackManager extends BleEventCallback {
-    private final ArrayList<BleEventCallback> mCallbacks = new ArrayList<>();//回调列表
+    private final ArrayList<BleEventCallback> mCallbacks = new ArrayList<>();// Callback list.
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     public void registerBleEventCallback(BleEventCallback callback) {

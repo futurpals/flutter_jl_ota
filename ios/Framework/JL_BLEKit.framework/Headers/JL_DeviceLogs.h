@@ -22,8 +22,6 @@ typedef void(^JLDeviceLogBK)(DeviceLogType type,float progress,NSString *_Nullab
 @interface JL_DeviceLogs : JL_FunctionBaseManager
 
 
-/// 检查获取设备log日志
-/// @param block 回调结果
 -(void)deviceLogDownload:(JLDeviceLogBK)block;
 
 

@@ -14,7 +14,7 @@
 
 void function_jieli(uint8_t *address,uint8_t *RAND,uint8_t *K,uint8_t *result);
 
-#pragma mark CRC校验
+#pragma mark - Vendor SDK
 unsigned short JL_CRC16(unsigned char *ptr, int len, uint16_t lastCrc);
 
 #endif /* JL_ble_pair_h */

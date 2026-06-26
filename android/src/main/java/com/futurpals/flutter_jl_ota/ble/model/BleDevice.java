@@ -22,17 +22,17 @@ import java.util.UUID;
 /**
  * @author zqjasonZhong
  * @email zhongzhuocheng@zh-jieli.com
- * @desc BLE设备
+ * @desc BLE device.
  * @since 2022/12/5
  */
 public class BleDevice {
     private final String tag = "BleManager";
-    private final Context context;                    //上下文
-    private final BluetoothGatt gatt;                 //BleGatt控制对象
+    private final Context context;                    // Context.
+    private final BluetoothGatt gatt;                 // BLE GATT controller.
     private int mtu = BluetoothConstant.BLE_MTU_MIN;  //MTU
-    private long connectedTime;                       //连接的时间戳
+    private long connectedTime;                       // Connection timestamp.
 
-    private SendBleDataThread sendDataThread;         //发送数据线程
+    private SendBleDataThread sendDataThread;         // Data sending thread.
 
     public BleDevice(@NonNull Context context, @NonNull BluetoothGatt gatt) {
         this.context = context;

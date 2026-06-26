@@ -10,11 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 手表蓝牙断开提醒设置
 @interface JLDisconnectRemindModel : JLwSettingModel
-//开关
 @property(nonatomic,assign)BOOL status;
-/// 提醒模式
 @property(nonatomic,assign)WatchRemindType rType;
 
 -(instancetype)initWithData:(NSData *)data;

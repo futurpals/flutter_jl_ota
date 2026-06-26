@@ -1,16 +1,17 @@
-# flutter_jl_ota_example
+# flutter_jl_ota example
 
-Demonstrates how to use the flutter_jl_ota plugin.
+This example app demonstrates the basic OTA flow:
 
-## Getting Started
+1. Request Bluetooth runtime permissions.
+2. Copy a bundled `.ufw` firmware file to an app-accessible path.
+3. Start an OTA update by device identifier.
+4. Listen for progress callbacks.
 
-This project is a starting point for a Flutter application.
+Before running the example, replace the sample device identifiers in
+`lib/main.dart` and place your firmware file under `assets/`.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+cd example
+flutter pub get
+flutter run
+```

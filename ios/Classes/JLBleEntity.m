@@ -2,7 +2,7 @@
 //  JLBleEntity.m
 //  JL_OTA
 //
-//  Created by 凌煊峰 on 2021/10/11.
+//  Created by the Jieli OTA sample on 2021/10/11.
 //
 
 #import "JLBleEntity.h"

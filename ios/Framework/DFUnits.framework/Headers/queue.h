@@ -3,7 +3,6 @@
 
 //
 //  Created by DFung on 16/1/25.
-//  Copyright © 2016年 DFung. All rights reserved.
 //
 
 /**
@@ -248,7 +247,6 @@ int8_t queue_put(queue_t *q, void *e);
 int8_t queue_put_wait(queue_t *q, void *e);
 
 /**
- * preview the first element of the queue（预览一个元素，但没有抽取。）
  *
  * q - the queue
  * e - pointer which will be set to the element

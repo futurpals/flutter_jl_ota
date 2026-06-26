@@ -7,7 +7,7 @@ import java.util.List;
  * @author zqjasonZhong
  * @since 2022/9/14
  * @email zhongzhuocheng@zh-jieli.com
- * @desc 回调处理类
+ * @desc Callback dispatcher.
  */
 public class CallbackRunnable<T> implements Runnable {
 

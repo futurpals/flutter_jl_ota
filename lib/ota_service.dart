@@ -64,7 +64,7 @@ class OtaService {
   static ValueChanged<OtaProgress>? _typedProgressCallback;
   static bool _isProgressHandlerRegistered = false;
 
-  // 开始扫描设备
+  /// Starts BLE scanning for OTA-capable devices.
   static Future<bool> startScan() async {
     try {
       final result = await _channel.invokeMethod('startScan');
@@ -75,7 +75,7 @@ class OtaService {
     }
   }
 
-  // 停止扫描设备
+  /// Stops the current BLE scan.
   static Future<bool> stopScan() async {
     try {
       final result = await _channel.invokeMethod('stopScan');
@@ -86,7 +86,7 @@ class OtaService {
     }
   }
 
-  // 连接设备
+  /// Connects to a device by iOS UUID or Android MAC address.
   static Future<bool> connectDevice(String uuid, {String? deviceName}) async {
     try {
       final arguments = <String, Object?>{
@@ -101,7 +101,7 @@ class OtaService {
     }
   }
 
-  // 获取设备信息
+  /// Queries OTA device information from the native SDK.
   static Future<bool> getDeviceInfo() async {
     try {
       final result = await _channel.invokeMethod('getDeviceInfo');
@@ -112,7 +112,7 @@ class OtaService {
     }
   }
 
-  // 开始 OTA 升级
+  /// Starts an OTA update with a local firmware file path.
   static Future<bool> startOtaUpdate(
     String uuid,
     String filePath, {
@@ -132,7 +132,7 @@ class OtaService {
     }
   }
 
-  // 是否正在 OTA 升级
+  /// Returns whether the native SDK is currently running an OTA update.
   static Future<bool> isOtaUpdateInProgress() async {
     try {
       final result = await _channel.invokeMethod('isOta');
@@ -143,7 +143,7 @@ class OtaService {
     }
   }
 
-  // 获取原生 JL OTA SDK 版本
+  /// Returns the native JL OTA SDK version when available.
   static Future<String?> getSdkVersion() async {
     try {
       final result = await _channel.invokeMethod<String>('getSdkVersion');
@@ -154,7 +154,7 @@ class OtaService {
     }
   }
 
-  // 取消 OTA 升级
+  /// Requests OTA cancellation.
   static Future<bool> cancelOtaUpdate() async {
     try {
       final result = await _channel.invokeMethod('cancelOtaUpdate');
@@ -165,13 +165,13 @@ class OtaService {
     }
   }
 
-  // 监听 OTA 进度和状态
+  /// Registers the legacy OTA progress callback.
   static void listenToOtaProgress(OtaProgressCallback onProgress) {
     _legacyProgressCallback = onProgress;
     _ensureProgressHandler();
   }
 
-  // 监听结构化 OTA 进度
+  /// Registers the typed OTA progress callback.
   static void listenToOtaProgressUpdates(ValueChanged<OtaProgress> onProgress) {
     _typedProgressCallback = onProgress;
     _ensureProgressHandler();

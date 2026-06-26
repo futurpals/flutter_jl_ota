@@ -7,23 +7,23 @@ import android.os.Parcelable;
 import com.jieli.jl_bt_ota.util.CHexConver;
 
 /**
- * BLE 设备扫描信息
+ * BLE device scan information.
  * <p>
  * Created by zqjasonzhong on 2018/10/17.
  */
 
 public class BleScanInfo implements Parcelable {
     /**
-     * 原始数据
+     * Raw data.
      */
     private byte[] rawData;
     /**
-     * 信号强度
+     * Signal strength.
      */
     private int rssi;
     /**
-     * 是否允许连接
-     * <p>说明: 默认允许连接，特殊情况不允许</p>
+     * Whether connection is allowed.
+     * <p>Connections are allowed by default and can be blocked for special cases.</p>
      */
     private boolean isEnableConnect = true;
 

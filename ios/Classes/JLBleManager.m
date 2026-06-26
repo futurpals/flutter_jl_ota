@@ -2,23 +2,23 @@
 //  JLBleManager.m
 //  JL_OTA
 //
-//  Created by 凌煊峰 on 2021/10/11.
+//  Created by the Jieli OTA sample on 2021/10/11.
 //
 
 #import "JLBleManager.h"
 //#import "FittingView.h"
 #import "SingleDataSender.h"
 
-#define SENDBYSINGLE  0 //1：通过信号检测发送 0：通过直接塞数据发送
+#define SENDBYSINGLE  0 // 1: send after signal detection; 0: send data directly.
 
-NSString *kFLT_BLE_FOUND = @"FLT_BLE_FOUND";            //发现设备
-NSString *kFLT_BLE_PAIRED = @"FLT_BLE_PAIRED";           //BLE已配对
-NSString *kFLT_BLE_CONNECTED = @"FLT_BLE_CONNECTED";        //BLE已连接
-NSString *kFLT_BLE_DISCONNECTED = @"FLT_BLE_DISCONNECTED";     //BLE断开连接
+NSString *kFLT_BLE_FOUND = @"FLT_BLE_FOUND";            // Device discovered.
+NSString *kFLT_BLE_PAIRED = @"FLT_BLE_PAIRED";           // BLE paired.
+NSString *kFLT_BLE_CONNECTED = @"FLT_BLE_CONNECTED";        // BLE connected.
+NSString *kFLT_BLE_DISCONNECTED = @"FLT_BLE_DISCONNECTED";     // BLE disconnected.
 
-NSString *FLT_BLE_SERVICE = @"AE00"; //服务号
-NSString *FLT_BLE_RCSP_W = @"AE01"; //命令“写”通道
-NSString *FLT_BLE_RCSP_R = @"AE02"; //命令“读”通道
+NSString *FLT_BLE_SERVICE = @"AE00"; // Service UUID.
+NSString *FLT_BLE_RCSP_W = @"AE01"; // Command write channel.
+NSString *FLT_BLE_RCSP_R = @"AE02"; // Command read channel.
 
 
 
@@ -88,9 +88,9 @@ blePeripheralArr;
 }
 
 
-#pragma mark - 扫描设备相关
+#pragma mark - Device Scanning
 
-#pragma mark 开始扫描
+#pragma mark Start Scan
 
 - (void)startScanBLE {
     NSLog(@"BLE ---> startScanBLE.");
@@ -109,16 +109,16 @@ blePeripheralArr;
     }
 }
 
-#pragma mark 停止扫描
+#pragma mark Stop Scan
 
 - (void)stopScanBLE {
     if (_bleManager) [_bleManager stopScan];
 }
 
 
-#pragma mark - 蓝牙设备连接相关
+#pragma mark - Bluetooth Device Connection
 
-#pragma mark 断开当前蓝牙设备连接
+#pragma mark Disconnect Current Bluetooth Device
 
 - (void)disconnectBLE {
     if (_bleCurrentPeripheral) {
@@ -129,7 +129,7 @@ blePeripheralArr;
     }
 }
 
-#pragma mark 连接蓝牙设备
+#pragma mark Connect Bluetooth Device
 
 - (void)connectBLE:(CBPeripheral *)peripheral {
     if (_bleCurrentPeripheral) {
@@ -148,7 +148,7 @@ blePeripheralArr;
     _connectByUUID = uuid;
     [self startScanBLE];
 
-    NSLog(@"sn_log => 传入了uuid : %@", uuid);
+    NSLog(@"sn_log => input uuid: %@", uuid);
 
     [self findHid:uuid];
 }
@@ -173,17 +173,17 @@ blePeripheralArr;
 
     if (self.connectByUUID == nil) return;
 
-    NSArray *uuidArr = @[[[NSUUID alloc] initWithUUIDString:self.connectByUUID]];
-    NSArray *phArr = [_bleManager retrievePeripheralsWithIdentifiers:uuidArr];//serviceUUID就是你首次连接配对的蓝牙
+    NSArray<NSUUID *> *uuidArr = @[[[NSUUID alloc] initWithUUIDString:self.connectByUUID]];
+    NSArray<CBPeripheral *> *phArr = [_bleManager retrievePeripheralsWithIdentifiers:uuidArr];
 
     if (phArr.count == 0) {
         return;
     }
 
-    CBPeripheral *peripheral = phArr[0];
+    CBPeripheral *peripheral = phArr.firstObject;
 
-    if (phArr.firstObject && [phArr.firstObject state] != CBPeripheralStateConnected &&
-        [phArr.firstObject state] != CBPeripheralStateConnecting) {
+    if (peripheral && peripheral.state != CBPeripheralStateConnected &&
+        peripheral.state != CBPeripheralStateConnecting) {
 
         NSString * ble_name = peripheral.name;
         NSString * ble_uuid = peripheral.identifier.UUIDString;
@@ -200,7 +200,7 @@ blePeripheralArr;
 
 #pragma mark - CBCentralManagerDelegate
 
-#pragma mark 蓝牙初始化 Callback
+#pragma mark Bluetooth Initialization Callback
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
 
@@ -209,13 +209,13 @@ blePeripheralArr;
     if (_mBleManagerState != CBManagerStatePoweredOn) {
         self.mBlePeripheral = nil;
         self.blePeripheralArr = [NSMutableArray array];
-    } else { // 状态开启就开始搜索
+    } else { // Start scanning once Bluetooth is powered on.
         [self findHid:self.connectByUUID];
         [self startScanBLE];
     }
 }
 
-#pragma mark 发现设备
+#pragma mark Discover Device
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral
      advertisementData:(NSDictionary
@@ -229,7 +229,7 @@ advertisementData RSSI
     NSDictionary * info = [JLAdvParse bluetoothAdvParse:self.pairKey AdvData:advertisementData];
     if (ble_name.length == 0) return;
 
-    NSLog(@"发现 ----> NAME:%@ RSSI:%@ AD:%@", ble_name, RSSI, ble_AD);
+    NSLog(@"Discovered ----> NAME:%@ RSSI:%@ AD:%@", ble_name, RSSI, ble_AD);
 
 //    NSString *key = [[FittingView getFitterKey] uppercaseString];
     NSString * key = @"";
@@ -238,7 +238,7 @@ advertisementData RSSI
     } else {
         if ([[ble_name uppercaseString] rangeOfString:key].location == NSNotFound) {
             //
-            NSLog(@"过滤 ----> NAME:%@ RSSI:%@ AD:%@", ble_name, RSSI, ble_AD);
+            NSLog(@"Filtered ----> NAME:%@ RSSI:%@ AD:%@", ble_name, RSSI, ble_AD);
         } else {
             [self addPeripheral:peripheral RSSI:RSSI Name:ble_name Info:info];
         }
@@ -246,7 +246,7 @@ advertisementData RSSI
 
     [DFNotice post:kFLT_BLE_FOUND Object:_blePeripheralArr];
 
-    // ota升级过程，回连使用
+    // Used for OTA reconnection during upgrade.
     if ([JLAdvParse otaBleMacAddress:self.lastBleMacAddress isEqualToCBAdvDataManufacturerData:ble_AD]) {
         [self connectBLE:peripheral];
     }
@@ -280,7 +280,7 @@ advertisementData RSSI
     }
 }
 
-#pragma mark 设备连接回调
+#pragma mark Device Connection Callback
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
     NSLog(@"BLE Connected ---> Device %@", peripheral.name);
@@ -296,7 +296,7 @@ advertisementData RSSI
     _otaManager.mBLE_UUID = peripheral.identifier.UUIDString;
 
     [DFNotice post:kFLT_BLE_CONNECTED Object:peripheral];
-    // 连接成功后，查找服务
+    // Discover services after connection succeeds.
     [peripheral discoverServices:nil];
 }
 
@@ -306,7 +306,7 @@ advertisementData RSSI
     NSLog(@"Err:BLE Connect FAIL ---> Device:%@ Error:%@", peripheral.name, [error description]);
 }
 
-#pragma mark 设备断开连接
+#pragma mark Device Disconnect Callback
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(nullable NSError
 
@@ -316,13 +316,13 @@ advertisementData RSSI
     [_otaManager noteEntityDisconnected];
     self.isConnected = NO;
     self.pairStatus = NO;
-    /*--- UI刷新，设备断开 ---*/
+    /*--- UI refresh: device disconnected. ---*/
     [[NSNotificationCenter defaultCenter] postNotificationName:kFLT_BLE_DISCONNECTED object:peripheral];
 }
 
 #pragma mark - CBPeripheralDelegate
 
-#pragma mark 设备服务回调
+#pragma mark Device Service Callback
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(nullable NSError
 
@@ -333,7 +333,7 @@ advertisementData RSSI
     }
     _mBlePeripheral = peripheral;
     for (CBService *service in peripheral.services) {
-        //如果我们知道要查询的特性的CBUUID，可以在参数一中传入CBUUID数组。
+        // Pass a CBUUID array as the first parameter when specific characteristics are known.
         //if ([service.UUID.UUIDString isEqual:FLT_BLE_SERVICE]) {
         NSLog(@"BLE Service ---> %@", service.UUID.UUIDString);
         [peripheral discoverCharacteristics:nil forService:service];
@@ -342,7 +342,7 @@ advertisementData RSSI
     }
 }
 
-#pragma mark 设备特征回调
+#pragma mark Device Characteristic Callback
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(nullable NSError
 
@@ -375,7 +375,7 @@ advertisementData RSSI
     }
 }
 
-#pragma mark 更新通知特征的状态
+#pragma mark Update Notify Characteristic State
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(nonnull CBCharacteristic
 
@@ -401,7 +401,7 @@ nullable NSError
             [_pairHash hashResetPair];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)),
                            dispatch_get_main_queue(), ^{
-                        //设备认证
+                        // Device authentication.
                         [self->_pairHash bluetoothPairingKey:self.pairKey Result:^(BOOL ret) {
                             if (ret) {
                                 weakSelf.lastUUID = peripheral.identifier.UUIDString;
@@ -425,7 +425,7 @@ nullable NSError
     self.isConnected = YES;
 }
 
-#pragma mark 设备返回的数据 GET
+#pragma mark Device Data Callback
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     if (error) {
@@ -434,10 +434,10 @@ nullable NSError
     }
 
     if (_isPaired == YES && _pairStatus == NO) {
-        //收到设备的认证交互数据
+        // Received device authentication data.
         [_pairHash inputPairData:characteristic.value];
     } else {
-        //收到的设备数据，正常通讯数据
+        // Received normal device communication data.
         [_otaManager cmdOtaDataReceive:characteristic.value];
     }
 
@@ -452,20 +452,21 @@ nullable NSError
 }
 
 
-#pragma mark - 杰理蓝牙库OTA流程相关业务
+#pragma mark - Jieli OTA SDK Flow
 
 /**
- *  获取已连接的蓝牙设备信息，这里如果上次设备升级没有成功，会要求执行otaFuncWithFilePath:强制升级
+ *  Gets connected device information. If the previous upgrade did not finish,
+ *  the SDK asks the caller to run otaFuncWithFilePath: for a forced upgrade.
  */
 - (void)getDeviceInfo:(GET_DEVICE_CALLBACK _Nonnull)callback {
-    /*--- 获取设备信息 ---*/
+    /*--- Get device information. ---*/
     _getCallback = callback;
     [_otaManager cmdTargetFeature];
 }
 
 /**
- *  ota升级
- *  @param otaFilePath ota升级文件路径
+ *  OTA update.
+ *  @param otaFilePath OTA firmware file path.
  */
 - (void)otaFuncWithFilePath:(NSString *)otaFilePath {
     NSLog(@"current otaFilePath ---> %@", otaFilePath);
@@ -491,11 +492,11 @@ nullable NSError
 
 //MARK: - ota manager delegate callback
 - (void)otaCancel {
-    //TODO: 取消OTA升级回调
+    // TODO: Handle OTA cancellation callback.
 }
 
 - (void)otaUpgradeResult:(JL_OTAResult)result Progress:(float)progress {
-    //TODO: 设备升级过程回调，包括进度状态
+    // TODO: Handle OTA progress and state callback.
 }
 
 - (void)otaDataSend:(NSData *)data {
@@ -506,7 +507,7 @@ nullable NSError
 
     NSLog(@"getDeviceInfo:%d", __LINE__);
     if (manager.otaStatus == JL_OtaStatusForce) {
-        NSLog(@"---> 进入强制升级.");
+        NSLog(@"---> Entering forced upgrade.");
         if (self.selectedOtaFilePath) {
             [self otaFuncWithFilePath:self.selectedOtaFilePath];
         } else {
@@ -515,7 +516,7 @@ nullable NSError
         return;
     } else {
         if (manager.otaHeadset == JL_OtaHeadsetYES) {
-            NSLog(@"---> 进入强制升级: OTA另一只耳机.");
+            NSLog(@"---> Entering forced upgrade: updating the other earbud.");
             if (self.selectedOtaFilePath) {
                 [self otaFuncWithFilePath:self.selectedOtaFilePath];
             } else {
@@ -524,9 +525,9 @@ nullable NSError
             return;
         }
     }
-    NSLog(@"---> 设备正常使用...");
+    NSLog(@"---> Device is ready for normal use...");
     dispatch_async(dispatch_get_main_queue(), ^{
-        /*--- 获取公共信息 ---*/
+        /*--- Get common device information. ---*/
         [self->_otaManager cmdSystemFunction];
         self->_getCallback(false);
     });
@@ -542,8 +543,8 @@ nullable NSError
 
 //MARK: - data send manager
 
-/// 需要分包发送
-/// - Parameter data: 数据
+/// Sends data in MTU-sized chunks.
+/// - Parameter data: Data to send.
 - (void)writeDataByCbp:(NSData *)data {
     //    NSLog(@"%s:data:%@",__func__,data);
     if (_mBlePeripheral && self.mRcspWrite) {
@@ -563,7 +564,7 @@ nullable NSError
             }
         }
     } else {
-        //需要先赋值写特征的内容
+        // The write characteristic must be initialized first.
         NSLog(@"need to init");
     }
 }
@@ -581,7 +582,7 @@ nullable NSError
 }
 
 
-//MARK: - 通过信号阀发送
+//MARK: - Send Through Signal Gate
 - (void)singleDidSendData:(NSData *)data {
     [_mBlePeripheral writeValue:data
               forCharacteristic:self.mRcspWrite
@@ -590,7 +591,5 @@ nullable NSError
 
 
 @end
-
-
 
 

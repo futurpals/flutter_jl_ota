@@ -2,7 +2,7 @@
 //  JL_SystemVolume.h
 //  JL_BLEKit
 //
-//  Created by 李放 on 2021/12/20.
+//  Created by Jieli Technology on 2021/12/20.
 //  Copyright © 2021 www.zh-jieli.com. All rights reserved.
 //
 
@@ -15,9 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JL_SystemVolume : JL_FunctionBaseManager
 
-#pragma mark ---> 设置系统音量
+#pragma mark - Vendor SDK
 /**
- @param volume 音量值
  */
 -(void)cmdSetSystemVolume:(UInt8)volume;
 -(void)cmdSetSystemVolume:(UInt8)volume Result:(JL_CMD_RESPOND __nullable)result;

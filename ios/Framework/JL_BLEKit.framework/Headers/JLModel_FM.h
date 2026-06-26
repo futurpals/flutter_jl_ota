@@ -2,7 +2,7 @@
 //  JLModel_FM.h
 //  JL_BLEKit
 //
-//  Created by 杰理科技 on 2021/10/15.
+//  Created by Jieli Technology on 2021/10/15.
 //  Copyright © 2021 www.zh-jieli.com. All rights reserved.
 //
 

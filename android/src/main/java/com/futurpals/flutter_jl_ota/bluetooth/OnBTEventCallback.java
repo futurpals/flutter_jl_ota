@@ -9,7 +9,7 @@ import java.util.UUID;
  * @author zqjasonZhong
  * @since 2022/9/14
  * @email zhongzhuocheng@zh-jieli.com
- * @desc 蓝牙事件回调
+ * @desc Bluetooth event callback.
  */
 public class OnBTEventCallback {
 

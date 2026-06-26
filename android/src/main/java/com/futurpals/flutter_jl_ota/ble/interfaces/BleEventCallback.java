@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Ble事件回调抽象类
+ * BLE event callback base class.
  *
  * @author zqjasonZhong
  * @since 2020/7/16

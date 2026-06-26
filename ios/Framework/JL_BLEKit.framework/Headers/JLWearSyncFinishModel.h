@@ -20,30 +20,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JLWatchExerciseIntens:NSObject
 
-/// 运动强度类型
 @property(nonatomic,assign)WatchExerciseIntensityType type;
 
-/// 持续时间
 @property(nonatomic,assign)UInt32 duration;
 
 @end
 
 @interface JLWearSyncFinishModel : JLWearSyncFinishDataModel
 
-/// 结束时间
 @property(nonatomic,strong)NSDate *endTime;
 
-/// 运动恢复时间
-/// 格式 ：hour : min
 @property(nonatomic,strong)NSString *recyleTime;
 
-/// 运动记录文件ID
 @property(nonatomic,assign)UInt16 sportId;
 
-/// 运动记录文件大小
 @property(nonatomic,assign)UInt16 fileSize;
 
-/// 运动强度类型数组
 @property(nonatomic,strong)NSArray <JLWatchExerciseIntens *> *durationArray;
 
 

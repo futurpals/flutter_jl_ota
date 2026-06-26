@@ -15,12 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign)int hour;
 @property(nonatomic,assign)int min;
 
-/// 处理回复数据内容
-/// @param value 数据内容
-/// @param submask 功能标记位
 +(JL_SDM_RecTime*)responseData:(NSData *)value subMask:(NSData *)submask;
 
-/// 请求内容
 +(JL_SDM_RecTime*)require;
 
 @end

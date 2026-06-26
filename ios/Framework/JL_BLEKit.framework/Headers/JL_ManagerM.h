@@ -2,7 +2,7 @@
 //  JL_ManagerM.h
 //  JL_BLEKit
 //
-//  Created by 杰理科技 on 2020/9/4.
+//  Created by Jieli Technology on 2020/9/4.
 //  Modify By EzioChan on 2023/03/27.
 //  Copyright © 2020 www.zh-jieli.com. All rights reserved.
 //
@@ -53,13 +53,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*
- *  从JL_ManagerM发出去的通知都是字典，如下所示：
  *
- *  @{ kJL_MANAGER_KEY_UUID  :当前设备的UUID,
- *     kJL_MANAGER_KEY_OBJECT:外抛的对象 }
  */
 extern NSString *kJL_MANAGER_KEY_UUID;      //KEY --> UUID
-extern NSString *kJL_MANAGER_KEY_OBJECT;    //KEY --> 对象
+extern NSString *kJL_MANAGER_KEY_OBJECT;
 
 
 @protocol JL_ManagerMDelegate <NSObject>
@@ -111,22 +108,15 @@ extern NSString *kJL_MANAGER_KEY_OBJECT;    //KEY --> 对象
 -(void)noteEntityBleOff;
 
 /**
- 发送【命令包】
- @param cmdCode 具体要发送的命令
- @param needResponse 是否需要回复
- @param sendData 具体要发送的数据
- @discussion 只有isCommand是YES时needResponse才有意义，即只有命令才需要回复
+ 【】
+ @discussion isCommandYESneedResponse，
  */
 -(void)xmCommandCode:(uint8_t)cmdCode
              needRep:(BOOL)needResponse
                 data:(NSData *)sendData;
 
 /**
- 发送【回复包】
- @param code  命令号
- @param sn      序号
- @param st      状态码
- @param data 回复的命令的内容
+ 【】
  */
 -(void)cmdResponseCode:(uint8_t)code
                   OpSN:(UInt8)sn
@@ -134,64 +124,51 @@ extern NSString *kJL_MANAGER_KEY_OBJECT;    //KEY --> 对象
                   Data:(NSData* __nullable)data;
 
 /**
- 发送【通知命令】
- @param name    通知名字
- @param obj       携带对象
+ 【】
  */
 -(void)managerPost:(NSString*)name Object:(id __nullable)obj;
 
 /**
-  获取当前命令序号
  */
 -(uint8_t)xmCommandSN;
 
-#pragma mark ---> 取出设备信息
+#pragma mark - Vendor SDK
 
-/// copy出来的原值
 -(JLModel_Device *)outputDeviceModel;
 
-/// 取出原本的值
 -(JLModel_Device *)getDeviceModel;
 
-#pragma mark ---> 获取设备信息
+#pragma mark - Vendor SDK
 extern NSString *kJL_MANAGER_TARGET_INFO;
 -(void)cmdTargetFeatureResult:(JL_CMD_RESPOND __nullable)result;
 -(void)cmdTargetFeature:(uint32_t)feature Result:(JL_CMD_RESPOND __nullable)result;
 
-#pragma mark ---> 断开经典蓝牙
+#pragma mark - Vendor SDK
 -(void)cmdDisconnectEdrResult:(JL_CMD_RESPOND __nullable)result;
 
-#pragma mark ---> 重置配对流程标志（使适配连接ANCS设备）
+#pragma mark - Vendor SDK
 -(void)cmdResetPairingResult:(JL_CMD_RESPOND __nullable)result;
 
-#pragma mark ---> 获取系统信息（全获取）
+#pragma mark - Vendor SDK
 /**
- @param function JL_FunctionCode
- @param result 回复
  */
 -(void)cmdGetSystemInfo:(JL_FunctionCode)function
                  Result:(JL_CMD_RESPOND __nullable)result;
 -(void)cmdGetSystemInfoResult;
 
-#pragma mark ---> 获取系统信息（选择性获取）
+#pragma mark - Vendor SDK
 /**
- @param function JL_FunctionCode
- @param result 回复
  */
 -(void)cmdGetSystemInfo:(JL_FunctionCode)function
            SelectionBit:(uint32_t)bits
                  Result:(JL_CMD_RESPOND __nullable)result;
 -(void)cmdGetSystemInfoResult_1;
 
-#pragma mark ---> 设备主动返回的系统信息
+#pragma mark - Vendor SDK
 extern NSString *kJL_MANAGER_SYSTEM_INFO;
 
-#pragma mark ---> 通用、BT、Music、RTC、Aux
+#pragma mark - Vendor SDK
 /**
- @param function 功能类型
- @param cmd 操作命令
- @param ext 扩展数据
- @param result 回复
  */
 -(void)cmdFunction:(JL_FunctionCode)function
            Command:(UInt8)cmd
@@ -199,11 +176,8 @@ extern NSString *kJL_MANAGER_SYSTEM_INFO;
             Result:(JL_CMD_RESPOND __nullable)result;
 
 typedef void(^JL_IMAGE_RT)(NSMutableDictionary* __nullable dict);
-#pragma mark ---> 获取设备的图片
+#pragma mark - Vendor SDK
 /**
- @param vid 设备vid
- @param pid 设备pid
- @param result 图片数据
  */
 -(void)cmdRequestDeviceImageVid:(NSString*)vid
                             Pid:(NSString*)pid
@@ -216,15 +190,11 @@ typedef void(^JL_IMAGE_RT)(NSMutableDictionary* __nullable dict);
 
 -(NSDictionary*)localDeviceImage:(NSString*)jsonFile;
 
-#pragma mark ---> 通知固件开始播放TTS内容
+#pragma mark - Vendor SDK
 
-/// 通知固件SDK播放tts
-/// @param status 0:开始播放，1:播放结束
 -(void)cmdStartTTSNote:(uint8_t)status;
 
 
-/// 获取MD5信息
-/// @param result 回调
 -(void)cmdGetMD5_Result:(JL_CMD_RESPOND)result;
 
 @end

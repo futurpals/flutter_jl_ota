@@ -10,17 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 实时压力
 @interface JL_SDM_Stress : JLSportDataModel
 
 @property(nonatomic,assign)int stress;
 
-/// 处理回复数据内容
-/// @param value 数据内容
-/// @param submask 功能标记位
 +(JL_SDM_Stress*)responseData:(NSData *)value subMask:(NSData *)submask;
 
-/// 请求内容
 +(JL_SDM_Stress*)require;
 
 @end

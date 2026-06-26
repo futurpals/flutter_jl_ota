@@ -35,9 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(NSDate *)toDate;
 
-/// 裁剪Data
-/// @param from 开始
-/// @param to 长度
 -(NSData *)subf:(NSInteger)from t:(NSInteger)to;
 
 -(uint16_t)crc:(uint16_t)baseCrc;

@@ -2,7 +2,7 @@
 //  JL_FunctionBaseManager.h
 //  JL_BLEKit
 //
-//  Created by 凌煊峰 on 2021/12/13.
+//  Created by Jieli Technology on 2021/12/13.
 //  Copyright © 2021 www.zh-jieli.com. All rights reserved.
 //
 

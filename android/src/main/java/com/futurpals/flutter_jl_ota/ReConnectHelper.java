@@ -27,8 +27,8 @@ import java.util.Objects;
 
 public class ReConnectHelper {
     private static final String TAG = ReConnectHelper.class.getSimpleName();
-    private static final int RECONNECT_TIMEOUT = (int) DeviceReConnectManager.RECONNECT_TIMEOUT; // 65秒
-    private static final long SCAN_TIMEOUT = 20 * 1000L; // 20秒
+    private static final int RECONNECT_TIMEOUT = (int) DeviceReConnectManager.RECONNECT_TIMEOUT; // 65 seconds.
+    private static final long SCAN_TIMEOUT = 20 * 1000L; // 20 seconds.
     private static final long FAILED_DELAY = 3 * 1000L;
     private static final int MSG_RECONNECT_TIMEOUT = 0x01;
     private static final int MSG_PROCESS_TASK = 0x02;
@@ -89,7 +89,7 @@ public class ReConnectHelper {
         if (param == null) return false;
         if (!mParams.contains(param)) {
             if (mParams.add(param)) {
-                // 添加任务超时
+                // Add a task timeout.
                 mUIHandler.sendEmptyMessageDelayed(mParams.hashCode(), RECONNECT_TIMEOUT);
                 if (!isReconnecting()) {
                     mUIHandler.sendMessageDelayed(mUIHandler.obtainMessage(

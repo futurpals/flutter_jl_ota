@@ -3,7 +3,6 @@
 //  DFUnits
 //
 //  Created by DFung on 2017/3/15.
-//  Copyright © 2017年 DFung. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -42,8 +41,6 @@ IB_DESIGNABLE
  
  The default scroll duration of 7.0 seconds and fade length of 0.0 are used.
  
- @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
- @return An initialized `DFLabel` object or nil if the object couldn't be created.
  */
 
 - (instancetype)initWithFrame:(CGRect)frame;
@@ -53,11 +50,7 @@ IB_DESIGNABLE
  
  You must specify a non-zero rate, and you cannot thereafter modify the rate.
  
- @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
- @param pixelsPerSec A rate of scroll for the label scroll animation. Must be non-zero. Note that this will be the maximum rate for ease-type animation.
- @param fadeLength A length of transparency fade at the left and right edges of the `DFLabel` instance's frame.
  @see fadeLength
- @return An initialized `DFLabel` object or nil if the object couldn't be created.
  */
 
 - (instancetype)initWithFrame:(CGRect)frame rate:(CGFloat)pixelsPerSec andFadeLength:(CGFloat)fadeLength;
@@ -67,11 +60,7 @@ IB_DESIGNABLE
  
  You must specify a non-zero duration, and you cannot thereafter modify the duration.
  
- @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
- @param scrollDuration A scroll duration the label scroll animation. Must be non-zero. This will be the duration that the animation takes for one-half of the scroll cycle in the case of left-right and right-left DFLabel types, and for one loop of a continuous DFLabel type.
- @param fadeLength A length of transparency fade at the left and right edges of the `DFLabel` instance's frame.
  @see fadeLength
- @return An initialized `DFLabel` object or nil if the object couldn't be created.
  */
 
 - (instancetype)initWithFrame:(CGRect)frame duration:(NSTimeInterval)scrollDuration andFadeLength:(CGFloat)fadeLength;
@@ -81,8 +70,6 @@ IB_DESIGNABLE
  
  The current origin of the frame is retained.
  
- @param maxSize The maximum size up to which the view should be resized. Passing `CGSizeZero` will result in no maximum size limit.
- @param adjustHeight A boolean that can be used to indicate if the view's height should also be adjusted. Note that this has no impact on scrolling.
  */
 - (void)minimizeLabelFrameWithMaximumSize:(CGSize)maxSize adjustHeight:(BOOL)adjustHeight;
 
@@ -384,7 +371,6 @@ IB_DESIGNABLE
  The default implementation of this method does nothing. Subclasses may override this method in order to perform any custom actions jas as
  the label animation completes, and before the next animation would begin (assuming the scroll conditions are met).
  
- @param finished A Boolean that indicates whether or not the scroll animation actually finished before the completion handler was called.
  @since Available in 1.5.0 and later.
  
  @warning This method will be called, and the `finished` parameter will be `NO`, when any property changes are made that would cause the label
@@ -431,7 +417,6 @@ IB_DESIGNABLE
  
  @warning This method may not function properly if passed the parent view controller when using view controller containment.
  
- @param controller The view controller that has appeared.
  @see restartLabel
  @see controllerViewDidAppear:
  @see controllerViewWillAppear:
@@ -445,7 +430,6 @@ IB_DESIGNABLE
  
  Alternative to `restartLabelsOfController:`. This method is retained for backwards compatibility and future enhancements.
  
- @param controller The view controller that has appeared.
  @see restartLabel
  @see controllerViewWillAppear:
  @since Available in 1.2.7 and later.
@@ -458,7 +442,6 @@ IB_DESIGNABLE
  
  Alternative to `restartLabelsOfController:`. This method is retained for backwards compatibility and future enhancements.
  
- @param controller The view controller that has appeared.
  @see restartLabel
  @see controllerViewDidAppear:
  @since Available in 1.2.8 and later.
@@ -479,7 +462,6 @@ IB_DESIGNABLE
  This method sends an `NSNotification` to all `DFLabel` instances with the specified view controller in their next
  responder chain. The `labelize` property of these `DFLabel` instances will be set to `YES`.
  
- @param controller The view controller for which all `DFLabel` instances should be labelized.
  @see labelize
  */
 
@@ -491,7 +473,6 @@ IB_DESIGNABLE
  This method sends an `NSNotification` to all `DFLabel` instances with the specified view controller in their next
  responder chain. The `labelize` property of these `DFLabel` instances will be set to `NO` .
  
- @param controller The view controller for which all `DFLabel` instances should be de-labelized.
  @see labelize
  */
 

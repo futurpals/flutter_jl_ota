@@ -12,13 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JLSportDataModel : NSObject
 
-/// 设备的UUID
 @property(nonatomic,strong)NSString *dev_uuid;
 
-/// 请求内容数据
 @property(nonatomic,strong)NSData *rqData;
 
-/// 功能掩码
 @property(nonatomic,assign)uint32_t funcMask;
 
 

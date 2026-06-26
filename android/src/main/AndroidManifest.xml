@@ -5,10 +5,10 @@
     <uses-feature
         android:name="android.hardware.bluetooth"
         android:required="true" />
-    <!-- 蓝牙权限 -->
+    <!-- Bluetooth permissions -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true" /><!-- 申明手机需要支持蓝牙 -->
+        android:required="true" /><!-- The host device must support BLE. -->
     <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
@@ -18,12 +18,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <!-- 定位权限 -->
-    <!-- 粗略位置 -->
+    <!-- Location permissions -->
+    <!-- Coarse location -->
     <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!-- 精确位置 -->
+    <!-- Fine location -->
     <!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-    <!-- 后台定位 -->
+    <!-- Background location -->
     <!--    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

@@ -2,7 +2,7 @@
 //  JLModel_File.h
 //  JL_BLEKit
 //
-//  Created by 杰理科技 on 2021/10/15.
+//  Created by Jieli Technology on 2021/10/15.
 //  Copyright © 2021 www.zh-jieli.com. All rights reserved.
 //
 
@@ -12,8 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(UInt8, JL_BrowseType) {
-    JL_BrowseTypeFolder             = 0,    //文件夹
-    JL_BrowseTypeFile               = 1,    //文件
+    JL_BrowseTypeFolder             = 0,
+    JL_BrowseTypeFile               = 1,
 };
 typedef NS_ENUM(UInt8, JL_CardType) {
     JL_CardTypeUSB                  = 0,    //USB

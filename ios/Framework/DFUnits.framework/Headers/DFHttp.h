@@ -3,7 +3,6 @@
 //  DFUnits
 //
 //  Created by DFung on 16/1/22.
-//  Copyright © 2016年 DFung. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -52,13 +51,11 @@
 +(NSString*)decodeURL:(NSString*)url;
 
 /**
- *  异步请求（GET）
  */
 +(void)getWithUrl:(NSString*)url
            Result:(void(^)(id ret, NSURLResponse *rps))block;
 
 /**
- *  异步请求（POST）
  */
 +(void)postWithUrl:(NSString*)url
               Body:(NSString*)body

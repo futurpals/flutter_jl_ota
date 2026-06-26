@@ -2,7 +2,7 @@
 //  JLBleEntity.h
 //  JL_OTA
 //
-//  Created by 凌煊峰 on 2021/10/11.
+//  Created by the Jieli OTA sample on 2021/10/11.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JLBleEntity : NSObject                                //蓝牙设备模型
+@interface JLBleEntity : NSObject                                // Bluetooth device model.
 
 @property (strong, nonatomic) NSNumber *mRSSI;
 @property (strong, nonatomic) CBPeripheral *mPeripheral;

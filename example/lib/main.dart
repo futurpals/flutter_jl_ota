@@ -1,11 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_jl_ota/flutter_jl_ota.dart';
-import 'package:flutter_jl_ota/ota_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'ota_path_util.dart';
@@ -23,8 +20,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // String _platformVersion = 'Unknown';
-  final otaPlugin = FlutterJlOta();
+  static const String sampleIosDeviceUuid =
+      '2B3681AF-B077-297D-D291-FA4A908CE06A';
+  static const String sampleAndroidDeviceAddress = '00:00:00:55:FB:D4';
 
   @override
   void initState() {
@@ -39,40 +37,42 @@ class _MyAppState extends State<MyApp> {
       Permission.location,
       Permission.bluetoothScan,
       Permission.bluetoothConnect,
-      Permission.bluetoothAdvertise
+      Permission.bluetoothAdvertise,
     ], onAllowed: (result) async {});
   }
 
   void startOta() async {
-    String deviceUuid = '2B3681AF-B077-297D-D291-FA4A908CE06A'; // 替换为实际 UUID
+    String deviceUuid = sampleIosDeviceUuid; // Replace with the actual UUID.
     if (Platform.isAndroid) {
-      deviceUuid = "00:00:00:55:FB:D4";
+      deviceUuid = sampleAndroidDeviceAddress;
     }
-    debugPrint("flutter_ota_log => startOta 执行了");
+    debugPrint('flutter_ota_log => startOta started');
     String ufwPath = await moveFileToLib();
-    await OtaService.startOtaUpdate(deviceUuid, ufwPath);
+    await FlutterJlOta.startOtaUpdate(deviceUuid, ufwPath);
 
-    // 监听进度和状态
-    OtaService.listenToOtaProgress((progress, status) {
-      debugPrint('OTA Progress: $progress%, Status: $status');
-      if (status == 'Failed' || status == 'Success') {
-        // 可选择取消监听或执行其他逻辑
+    // Listen for progress and state changes.
+    FlutterJlOta.listenToOtaProgressUpdates((event) {
+      debugPrint('OTA Progress: ${event.progress}%, Status: ${event.status}');
+      if (event.isCompleted || event.isError) {
+        // Optionally stop listening or run follow-up logic.
       }
     });
   }
 
-  /// 调试用
-  static moveFileToLib() async {
+  /// Copies the bundled firmware asset to a writable local path.
+  static Future<String> moveFileToLib() async {
     String fileName = 'update_20250401.ufw';
 
     String filePath = 'assets/$fileName';
     final ByteData data = await rootBundle.load(filePath);
-    final List<int> bytes =
-        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    final List<int> bytes = data.buffer.asUint8List(
+      data.offsetInBytes,
+      data.lengthInBytes,
+    );
     String libPath = await OtaPathUtil.getFilePath(fileName);
     File file = File(libPath);
     await file.writeAsBytes(bytes);
-    debugPrint("该文件bytes大小为 ${bytes.length}");
+    debugPrint('Firmware size: ${bytes.length} bytes');
     return libPath;
   }
 
@@ -80,9 +80,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
+        appBar: AppBar(title: const Text('Plugin example app')),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,9 +93,9 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () {
                   startOta();
                 },
-                child: const Text("upgrade"),
+                child: const Text('Upgrade'),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -13,7 +13,7 @@ import io.flutter.Log;
 
 
 /**
- * 配置辅助类
+ * Configuration helper.
  *
  * @author zqjasonZhong
  * @since 2022/9/8

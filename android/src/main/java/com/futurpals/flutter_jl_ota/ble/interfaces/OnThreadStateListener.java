@@ -1,7 +1,7 @@
 package com.futurpals.flutter_jl_ota.ble.interfaces;
 
 /**
- * 线程生命周期监听器
+ * Thread lifecycle listener.
  *
  * @author zqjasonZhong
  * @date 2019/9/20

@@ -3,7 +3,6 @@
 //  Test
 //
 //  Created by DFung on 2018/2/2.
-//  Copyright © 2018年 DFung. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

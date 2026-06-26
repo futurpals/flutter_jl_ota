@@ -33,7 +33,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 
 /**
  * FlutterJlOtaPlugin
- * 改进后的 Flutter 插件，提供完整的 OTA 功能
+ * Flutter plugin entry point for the JL OTA flow.
  */
 public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
     private static final String TAG = "FlutterJlOtaPlugin";
@@ -47,7 +47,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_jl_ota");
         channel.setMethodCallHandler(this);
         context = flutterPluginBinding.getApplicationContext();
-        ConfigHelper.initialize(context); // 初始化 ConfigHelper
+        ConfigHelper.initialize(context); // Initialize ConfigHelper.
     }
 
     @Override
@@ -98,8 +98,8 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
 
             case "startScan":
                 if (!ensureBluetoothAvailable(result)) return;
-                initOtaManagerIfNeeded("", ""); // 初始化时无需特定 UUID 和名称
-                otaManager.startLeScan(20 * 1000L); // 20秒超时
+                initOtaManagerIfNeeded("", ""); // No specific UUID or name is required for scanning.
+                otaManager.startLeScan(20 * 1000L); // 20-second timeout.
                 result.success(true);
                 break;
 
@@ -171,7 +171,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
                     return;
                 }
                 otaManager.cancelOTA();
-                result.success(true); // 双备份 OTA 支持取消
+                result.success(true); // Dual-bank OTA supports cancellation.
                 break;
 
             default:
@@ -189,7 +189,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
         return true;
     }
 
-    // 初始化 OtaManager，如果尚未初始化或需要更新 UUID
+    // Initializes OtaManager or recreates it when the target UUID changes.
     private void initOtaManagerIfNeeded(String mac, String deviceName) {
         if (otaManager == null) {
             otaManager = new OtaManager(context, mac, deviceName);
@@ -203,7 +203,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
         }
     }
 
-    // 配置 OtaManager 的默认参数
+    // Configures the default OtaManager options.
     private void configureOtaManager() {
         BluetoothOTAConfigure config = BluetoothOTAConfigure.createDefault()
                 .setPriority(BluetoothOTAConfigure.PREFER_BLE)
@@ -217,7 +217,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
         otaManager.configure(config);
     }
 
-    // 开始 OTA 升级
+    // Starts the OTA update.
     private void startOtaUpdate(String uuid, String filePath, Result result) {
         otaStartRequested = false;
         otaManager.setOtaStatusCallback(new OtaStatusCallback() {
@@ -299,7 +299,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
     }
 
 
-    // 通过 MethodChannel 发送进度更新
+    // Sends progress updates through the MethodChannel.
     private void invokeProgress(int progress, String status) {
         new Handler(Looper.getMainLooper()).post(() -> {
             Map<String, Object> response = new HashMap<>();

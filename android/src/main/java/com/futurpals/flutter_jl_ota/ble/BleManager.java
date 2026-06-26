@@ -56,7 +56,7 @@ import java.util.UUID;
 
 
 /**
- * Ble连接管理类
+ * BLE connection manager.
  *
  * @author zqjasonZhong
  * @since 2020/7/16
@@ -68,16 +68,16 @@ public class BleManager {
     private volatile static BleManager instance;
     private final ConfigHelper configHelper = ConfigHelper.getInstance();
 
-    // 获取BleManager实例，传递Context
+    // Gets the BleManager instance with a Context.
     public static BleManager getInstance(Context context, String m_mac, String d_deviceName) {
         if (instance == null) {
             synchronized (BleManager.class) {
                 if (instance == null) {
-                    // 传递Context给构造函数，确保非空
+                    // Pass the Context into the constructor and keep it non-null.
                     if (context == null) {
                         throw new IllegalStateException("Context is required to initialize BleManager");
                     }
-                    instance = new BleManager(context.getApplicationContext(), m_mac, d_deviceName); // 使用Application Context
+                    instance = new BleManager(context.getApplicationContext(), m_mac, d_deviceName); // Use the application Context.
                     JL_Log.w(TAG, "init BleManager.. " + instance);
 
                 }
@@ -114,8 +114,8 @@ public class BleManager {
     private BluetoothLeScanner mBluetoothLeScanner;
 
 
-    private volatile BluetoothDevice mConnectingBtDevice;     //连接中的设备
-    private volatile BluetoothDevice mUsingDevice;            //正在通讯的设备
+    private volatile BluetoothDevice mConnectingBtDevice;     // Device being connected.
+    private volatile BluetoothDevice mUsingDevice;            // Device currently in use.
 
     private final Map<String, BleDevice> mConnectedGattMap = new HashMap<>();
     private final List<BluetoothDevice> mDiscoveredBleDevices = new ArrayList<>();
@@ -125,24 +125,24 @@ public class BleManager {
     public boolean isConnected = false;
     private NotifyCharacteristicRunnable mNotifyCharacteristicRunnable;
 
-    private int mRetryConnectCount = 0;//连接失败后尝试连接次数
-    private long startConnectTime = 0; //开始连接时间戳
-    private final static int MAX_RETRY_CONNECT_COUNT = 1;//最大尝试连接次数
-    private final static int MIN_CONNECT_TIME = 5 * 1000; //连接最小时间超时
-    //BLE服务UUID
+    private int mRetryConnectCount = 0;// Retry count after connection failures.
+    private long startConnectTime = 0; // Connection start timestamp.
+    private final static int MAX_RETRY_CONNECT_COUNT = 1;// Maximum connection retry count.
+    private final static int MIN_CONNECT_TIME = 5 * 1000; // Minimum connection timeout.
+    // BLE service UUID.
     public final static UUID BLE_UUID_SERVICE = BluetoothConstant.UUID_SERVICE;
-    //BLE的写特征UUID
+    // BLE write characteristic UUID.
     public final static UUID BLE_UUID_WRITE = BluetoothConstant.UUID_WRITE;
-    //BLE的通知特征UUID
+    // BLE notify characteristic UUID.
     public final static UUID BLE_UUID_NOTIFICATION = BluetoothConstant.UUID_NOTIFICATION;
-    //BLE的通知特征的描述符UUID
+    // BLE notify descriptor UUID.
     public final static UUID BLE_UUID_NOTIFICATION_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB");
 
     /**
-     * 发送数据最大超时 - 8 秒
+     * Maximum data send timeout: 8 seconds.
      */
     public final static int SEND_DATA_MAX_TIMEOUT = 8000; //8 s
-    private final static int SCAN_BLE_TIMEOUT = 12 * 1000;  //建议搜索BLE最小时间
+    private final static int SCAN_BLE_TIMEOUT = 12 * 1000;  // Recommended minimum BLE scan time.
     private final static int CONNECT_BLE_TIMEOUT = 40 * 1000;
     private final ReConnectHelper mReConnectHelper;
 
@@ -241,10 +241,10 @@ public class BleManager {
     }
 
     /**
-     * 获取已连接的BLE设备列表
+     * Gets the connected BLE device list.
      *
-     * @param context 上下文
-     * @return 已连接的BLE设备列表
+     * @param context Android context.
+     * @return Connected BLE device list.
      */
     @SuppressLint("MissingPermission")
     public static List<BluetoothDevice> getConnectedBleDeviceList(Context context) {
@@ -289,12 +289,12 @@ public class BleManager {
         return isBleScanning;
     }
 
-    // 获取已连接的BLE设备
+    // Gets the connected BLE device.
     @SuppressLint("MissingPermission")
     private List<BluetoothDevice> getConnectedBleDevices() {
         BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager != null) {
-            // 获取所有与 GATT 服务相关的已连接设备
+            // Gets all connected devices associated with GATT services.
             List<BluetoothDevice> connectedDevices = bluetoothManager.getConnectedDevices(BluetoothProfile.GATT);
             return connectedDevices;
         }
@@ -321,7 +321,7 @@ public class BleManager {
             syncSystemBleDevice();
             return true;
         }
-        ///获取已连接的设备
+        /// Gets the connected device.
         List<BluetoothDevice> connectedDevices = getConnectedBleDevices();
         if (connectedDevices != null && !connectedDevices.isEmpty()) {
             for (BluetoothDevice device : connectedDevices) {
@@ -334,15 +334,15 @@ public class BleManager {
         boolean ret;
         if (Build.VERSION.SDK_INT >= LOLLIPOP && mBluetoothLeScanner != null) {
             ScanSettings scanSettings;
-            int scanMode = ScanSettings.SCAN_MODE_BALANCED; //修改搜索BLE模式 -- 均衡模式
+            int scanMode = ScanSettings.SCAN_MODE_BALANCED; // Use balanced BLE scan mode.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                Log.e(TAG,"扫描 这里 1");  todo  走这里
+//                Log.e(TAG, "Scan branch 1"); // TODO: reached this branch.
                 scanSettings = new ScanSettings.Builder()
                         .setScanMode(scanMode)
                         .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
                         .build();
             } else {
-//                Log.e(TAG,"扫描 这里 2");
+//                Log.e(TAG, "Scan branch 2");
 
                 scanSettings = new ScanSettings.Builder()
                         .setScanMode(scanMode)
@@ -369,20 +369,20 @@ public class BleManager {
         }
         return ret;
     }
-    // 判断是否有连接的蓝牙设备
+    // Checks whether a Bluetooth device is connected.
 
     @SuppressLint("MissingPermission")
     private BluetoothDevice getBluetoothDeviceById(String remoteID) {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         BluetoothDevice targetDevice = bluetoothAdapter.getRemoteDevice(remoteID);
 
-        // 判断设备是否支持 BLE
+        // Checks whether the device supports BLE.
         if (targetDevice.getType() == BluetoothDevice.DEVICE_TYPE_LE) {
-            // 设备支持 BLE
-            Log.d("Bluetooth", "设备支持 BLE");
+            // Device supports BLE.
+            Log.d("Bluetooth", "Device supports BLE");
         } else {
-            // 设备不支持 BLE
-            Log.d("Bluetooth", "设备不支持 BLE");
+            // Device does not support BLE.
+            Log.d("Bluetooth", "Device does not support BLE");
         }
 
         return targetDevice;
@@ -430,12 +430,12 @@ public class BleManager {
     }
 
     /**
-     * 获取已连接设备列表
+     * Gets the connected device list.
      * <p>
-     * 按照连接时间倒序
+     * Sorted by connection time in descending order.
      * </p>
      *
-     * @return 设备列表
+     * @return Device list.
      */
     public List<BluetoothDevice> getConnectedDeviceList() {
         if (mConnectedGattMap.isEmpty()) return new ArrayList<>();
@@ -483,7 +483,7 @@ public class BleManager {
     @SuppressLint("MissingPermission")
     public boolean connectBleDevice(BluetoothDevice device) {
 //        if (isConnected) return true;
-        //TODO 连接设备的方法
+        // TODO: connect device.
         if (null == device || !AppUtil.checkHasConnectPermission(mContext)) return false;
        /* if (mUsingDevice != null) {
             JL_Log.e(TAG, "BleDevice is connected, please call disconnectBleDevice method at first.");
@@ -500,7 +500,7 @@ public class BleManager {
         BluetoothGatt gatt = null;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                Log.e(TAG,"connectBleDevice1");  todo 走这里
+//                Log.e(TAG, "connectBleDevice1"); // TODO: reached this branch.
                 gatt = device.connectGatt(
                         mContext,
                         false,
@@ -517,7 +517,7 @@ public class BleManager {
                 );
             }
         } catch (Exception e) {
-            Log.e(TAG, "gatt 连接异常 +" + e);
+            Log.e(TAG, "GATT connection exception: " + e);
 //            e.printStackTrace();
         }
 
@@ -525,7 +525,7 @@ public class BleManager {
         if (ret) {
 //            putConnectedGattInMap(device.getAddress(), gatt);
             setConnectingBtDevice(device);
-//            Log.e(TAG,"设置mConnectingBtDevice=="+mConnectingBtDevice+",device=="+device);todo 都有
+//            Log.e(TAG, "set mConnectingBtDevice == " + mConnectingBtDevice + ", device == " + device); // TODO: both values exist.
             handleBleConnection(device, BluetoothProfile.STATE_CONNECTING);
             JL_Log.d(TAG, "connect start...." + printDeviceInfo(mConnectingBtDevice));
         }
@@ -660,7 +660,7 @@ public class BleManager {
                 && !mDiscoveredBleDevices.contains(device)) {
             JL_Log.d(TAG, "notify device : " + printDeviceInfo(device));
             if (device.getAddress().equalsIgnoreCase(mac)) {
-                Log.e(TAGG, "发现指定设备，进行连接！");
+                Log.e(TAGG, "Target device found; connecting.");
                 if (connectBleDevice(device)) {
                     isConnected = false;
                 }
@@ -748,12 +748,12 @@ public class BleManager {
     }
 
     /**
-     * 用于开启蓝牙BLE设备Notification服务
+     * Enables the BLE notification service.
      *
-     * @param gatt               被连接的ble Gatt服务对象
-     * @param serviceUUID        服务UUID
+     * @param gatt               Connected BLE GATT service object.
+     * @param serviceUUID        Service UUID.
      * @param characteristicUUID characteristic UUID
-     * @return 结果 true 则等待系统回调BLE服务
+     * @return true when the system BLE service callback should be awaited.
      */
     @SuppressLint("MissingPermission")
     private boolean enableBLEDeviceNotification(BluetoothGatt gatt, UUID serviceUUID, UUID
@@ -774,15 +774,15 @@ public class BleManager {
         }
         boolean bRet = gatt.setCharacteristicNotification(characteristic, true);
         if (bRet) {
-            bRet = false; //重置标识
+            bRet = false; // Reset the flag.
             List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
             for (BluetoothGattDescriptor descriptor : descriptors) {
                 if (!BLE_UUID_NOTIFICATION_DESCRIPTOR.equals(descriptor.getUuid()))
-                    continue; //跳过不相关描述符
+                    continue; // Skip unrelated descriptors.
                 bRet = tryToWriteDescriptor(gatt, descriptor, 0, false);
                 if (!bRet) {
                     JL_Log.w(TAG, "tryToWriteDescriptor failed....");
-                } else { //正常只有一个描述符，使能即可
+                } else { // Usually there is only one descriptor to enable.
                     break;
                 }
             }
@@ -831,12 +831,12 @@ public class BleManager {
         return ret;
     }
 
-    //回收调整MTU的超时任务
+    // Clears the MTU change timeout task.
     private void stopChangeMtu() {
         mHandler.removeMessages(MSG_CHANGE_BLE_MTU_TIMEOUT);
     }
 
-    //开始调整BLE协议MTU
+    // Starts changing the BLE protocol MTU.
     @SuppressLint("MissingPermission")
     private void startChangeMtu(BluetoothGatt gatt, int mtu) {
         if (gatt == null || !AppUtil.checkHasConnectPermission(mContext)) {
@@ -861,7 +861,7 @@ public class BleManager {
             }
         }
         JL_Log.d(TAG, "-startChangeMtu- ret = " + ret);
-        if (ret) { //调整成功，开始超时任务
+        if (ret) { // MTU change succeeded; start timeout task.
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_CHANGE_BLE_MTU_TIMEOUT, device), CALLBACK_TIMEOUT);
         } else {
             handleBleConnectedEvent(device);
@@ -943,8 +943,8 @@ public class BleManager {
                     || newState == BluetoothProfile.STATE_CONNECTED) {
 
                 setConnectingBtDevice(null);
-                if (newState == BluetoothProfile.STATE_CONNECTED) {  //BLE连接成功
-                    Log.e(TAG, "连接成功!!!!!!!!!!!!");
+                if (newState == BluetoothProfile.STATE_CONNECTED) {  // BLE connected.
+                    Log.e(TAG, "BLE connected.");
 
                     isConnected = true;
                     mRetryConnectCount = 0;
@@ -961,12 +961,12 @@ public class BleManager {
                     return;
                 } else {
                     removeConnectedBle(device);
-                    AppUtil.refreshBleDeviceCache(mContext, gatt); //强制更新缓存
+                    AppUtil.refreshBleDeviceCache(mContext, gatt); // Force cache refresh.
                     gatt.close();
 
-                    long usedConnectTime = System.currentTimeMillis() - startConnectTime; //连接已耗费时间
+                    long usedConnectTime = System.currentTimeMillis() - startConnectTime; // Elapsed connection time.
                     JL_Log.d(TAG, "onConnectionStateChange >> usedConnectTime = " + usedConnectTime + ", limit time = " + MIN_CONNECT_TIME);
-                    if (status == 133 && usedConnectTime < MIN_CONNECT_TIME) { //Todo: 遇到了异常断开情况, 尝试重连设备
+                    if (status == 133 && usedConnectTime < MIN_CONNECT_TIME) { // TODO: unexpected disconnect; retry the connection.
                         if (mRetryConnectCount < MAX_RETRY_CONNECT_COUNT) {
                             mRetryConnectCount++;
                             connectBleDevice(device);
@@ -989,7 +989,7 @@ public class BleManager {
             mHandler.removeMessages(MSG_BLE_DISCOVER_SERVICES_CALLBACK_TIMEOUT);
 
             mCallbackManager.onBleServiceDiscovery(device, status, gatt.getServices());
-//            JL_Log.i(TAG, "onServicesDiscovered device: " + device+",status:"+status+",服务:"+gatt.getServices());  没毛病
+//            JL_Log.i(TAG, "onServicesDiscovered device: " + device+",status:"+status+",services:"+gatt.getServices());  valid
 
             boolean ret = false;
             if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -1087,8 +1087,8 @@ public class BleManager {
                     && descriptor.getUuid() != null && descriptor.getUuid().equals(mNotifyCharacteristicRunnable.mDescriptorUUID)) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     mNotifyCharacteristicRunnable = null;
-                    // TODO: 2022/6/28 由于部分手机(小米11 Lite)的兼容性问题，MTU不能调整到最大，建议适当减小MTU
-//                    startChangeMtu(gatt, 128); //调整MTU最大为128
+                    // TODO: 2022/6/28 Some phones, such as Xiaomi 11 Lite, cannot use the maximum MTU. Use a smaller MTU when needed.
+//                    startChangeMtu(gatt, 128); // Limit MTU to 128.
                     int requestMTU = configHelper.getBleRequestMtu();
                     if (requestMTU > 509) {
                         requestMTU = 509;
@@ -1120,9 +1120,9 @@ public class BleManager {
             mCallbackManager.onBleDataBlockChanged(device, mtu, status);
             BleDevice bleDevice = getConnectedBle(device);
             if (BluetoothGatt.GATT_SUCCESS == status) {
-                // 需要减去3个字节的数据包头部信息
+                // Subtract the 3-byte packet header.
                 int bleMtu = mtu - 3;
-                if (bleDevice != null && mHandler.hasMessages(MSG_CHANGE_BLE_MTU_TIMEOUT)) { //调整MTU的回调
+                if (bleDevice != null && mHandler.hasMessages(MSG_CHANGE_BLE_MTU_TIMEOUT)) { // MTU change callback.
 
 
                     bleDevice.setMtu(bleMtu);
@@ -1188,7 +1188,7 @@ public class BleManager {
             this.mGatt = gatt;
             this.mServiceUUID = serviceUUID;
             this.mCharacteristicUUID = characteristicUUID;
-//            Log.e("NotifyCharacteristicRunnable","mgatt=="+mGatt+",mSU=="+mServiceUUID+",mCU=="+mCharacteristicUUID);todo 值有正确设置
+//            Log.e("NotifyCharacteristicRunnable","mgatt=="+mGatt+",mSU=="+mServiceUUID+",mCU=="+mCharacteristicUUID);TODO: values are set correctly.
         }
 
         private void setRetryNum(int retryNum) {

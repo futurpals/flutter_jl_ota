@@ -3,7 +3,6 @@
 //  Test
 //
 //  Created by DFung on 2018/2/28.
-//  Copyright © 2018年 DFung. All rights reserved.
 //
 
 #ifndef JL_vad_h
@@ -117,19 +116,12 @@ typedef struct htk_fe_s htk_fe_t;
 /*
  *  How to use? See follow...
  *
- *  1、开启录音前：
- *      /--- 开启Vad ---/
  *      int need_buf_size = vad_get_need_buf_size();
  *      vad_hdl = malloc(need_buf_size);
  *      vad_init(vad_hdl, 10, 51);
  *
- *  2、结束录音后：
- *      /--- 关闭Vad ---/
  *      free(vad_hdl);
  *
- *  3、录音数据回调：
- *      buf：录音数据 ，需要320Bytes！
- *      ret：0->静音状态  1->正在说话   2->结束说话
  *      int ret = vad_main(vad_hdl, (int*)buf);
  */
 int vad_get_need_buf_size(void);

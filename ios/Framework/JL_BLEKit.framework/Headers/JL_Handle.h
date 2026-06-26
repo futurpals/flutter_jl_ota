@@ -14,9 +14,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  收到设备返回的XM_PKG的回调。
  */
-extern NSString *kJL_CMD_RECEIVE;       //XM_RCSP【接收】
+extern NSString *kJL_CMD_RECEIVE;
 
 @protocol JL_HandleDelegate <NSObject>
 @optional
@@ -27,15 +26,12 @@ extern NSString *kJL_CMD_RECEIVE;       //XM_RCSP【接收】
 @property(nonatomic,weak)id<JL_HandleDelegate>delegate;
 
 /**
-输入BLE数据
-@param data  设备过来的数据
+BLE
 */
 -(void)inputHandleData:(NSData*)data;
 
-/**[实例]
-向设备发送JL_PKG数据包。
-@param pkg JL_PKG数据模型
-@param name 设备名字
+/**[]
+JL_PKG。
 */
 -(NSData*)sendPackage:(JL_PKG*)pkg WithName:(NSString*)name;
 

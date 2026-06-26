@@ -18,7 +18,7 @@ static OtaTool *sharedInstance = nil;
 
 @implementation OtaTool
 
-#pragma mark - 单例实现
+#pragma mark - Singleton
 
 + (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
@@ -45,7 +45,7 @@ static OtaTool *sharedInstance = nil;
     return self;
 }
 
-#pragma mark - 公共方法
+#pragma mark - Public Methods
 
 - (void)startScan {
     [[JLBleManager sharedInstance] startScanBLE];
@@ -94,9 +94,7 @@ static OtaTool *sharedInstance = nil;
     }];
 }
 
-- (void)setOtaProgressCallback:(void (^)(NSInteger, NSString
-
-*))callback {
+- (void)setOtaProgressCallback:(void (^)(NSInteger, NSString *))callback {
     _otaProgressCallback = [callback copy];
 }
 
@@ -109,7 +107,7 @@ static OtaTool *sharedInstance = nil;
     return sdkVersion ?: @"";
 }
 
-#pragma mark - 初始化与通知
+#pragma mark - Setup and Notifications
 
 - (void)setup {
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -169,12 +167,12 @@ static OtaTool *sharedInstance = nil;
                 intProgress = MIN(intProgress, 99);
                 break;
             case JL_OTAResultSuccess:
-                NSLog(@"--->升级成功.");
+                NSLog(@"---> OTA succeeded.");
                 intProgress = 100;
                 self.otaInProgress = NO;
                 break;
             case JL_OTAResultPrepared:
-                NSLog(@"---> 检验文件【完成】");
+                NSLog(@"---> Firmware file verification completed.");
                 break;
             case JL_OTAResultReconnect:
                 [[JLBleManager sharedInstance] connectPeripheralWithUUID:self.uuid];
@@ -183,7 +181,7 @@ static OtaTool *sharedInstance = nil;
                 [self handleReconnectByMac];
                 break;
             case JL_OTAResultReboot:
-                NSLog(@"--->设备重启.");
+                NSLog(@"---> Device rebooting.");
                 break;
             case JL_OTAResultFail:
             case JL_OTAResultFailCmdTimeout:
@@ -203,7 +201,7 @@ static OtaTool *sharedInstance = nil;
 
 - (void)handleReconnectByMac {
     JLBleManager *model = [JLBleManager sharedInstance];
-    NSLog(@"---> OTA正在通过Mac Addr方式回连设备... %@",
+    NSLog(@"---> OTA is reconnecting by MAC address... %@",
           model.otaManager.bleAddr);
     [JLBleManager sharedInstance].lastBleMacAddress = model.otaManager.bleAddr;
     [[JLBleManager sharedInstance] startScanBLE];

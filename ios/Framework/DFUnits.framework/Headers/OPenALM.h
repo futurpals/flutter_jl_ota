@@ -2,8 +2,7 @@
 //  OPenALM.h
 //  OpenALForPCM
 //
-//  Created by 陈冠杰 on 16/2/15.
-//  Copyright © 2016年 zh-JieLi. All rights reserved.
+//  Created by Jieli Technology on 16/2/15.
 //
 
 #import <Foundation/Foundation.h>
@@ -23,7 +22,6 @@ struct AL_Data{
 
 
 /**
- *  【OPenALM】播放停止
  */
 #define kOPenALM_STOP    @"OPenALM_STOP"
 

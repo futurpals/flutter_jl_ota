@@ -66,8 +66,6 @@ typedef struct {
  *  memory mirroring technique works, the true buffer length will
  *  be multiples of the device page size (e.g. 4096 bytes)
  *
- * @param buffer Circular buffer
- * @param length Length of buffer
  */
 #define TPCircularBufferInit(buffer, length) \
     _TPCircularBufferInit(buffer, length, sizeof(*buffer))
@@ -101,8 +99,6 @@ void  TPCircularBufferClear(TPCircularBuffer *buffer);
  *
  *  The default value is true (the buffer will use atomic operations)
  *
- * @param buffer Circular buffer
- * @param atomic Whether the buffer is atomic (default true)
  */
 void  TPCircularBufferSetAtomic(TPCircularBuffer *buffer, bool atomic);
 
@@ -114,9 +110,6 @@ void  TPCircularBufferSetAtomic(TPCircularBuffer *buffer, bool atomic);
  *  This gives you a pointer to the end of the buffer, ready
  *  for reading, and the number of available bytes to read.
  *
- * @param buffer Circular buffer
- * @param availableBytes On output, the number of bytes ready for reading
- * @return Pointer to the first bytes ready for reading, or NULL if buffer is empty
  */
 static __inline__ __attribute__((always_inline)) void* TPCircularBufferTail(TPCircularBuffer *buffer, int32_t* availableBytes) {
     *availableBytes = buffer->fillCount;
@@ -129,8 +122,6 @@ static __inline__ __attribute__((always_inline)) void* TPCircularBufferTail(TPCi
  *
  *  This frees up the just-read bytes, ready for writing again.
  *
- * @param buffer Circular buffer
- * @param amount Number of bytes to consume
  */
 static __inline__ __attribute__((always_inline)) void TPCircularBufferConsume(TPCircularBuffer *buffer, int32_t amount) {
     buffer->tail = (buffer->tail + amount) % buffer->length;
@@ -148,9 +139,6 @@ static __inline__ __attribute__((always_inline)) void TPCircularBufferConsume(TP
  *  This gives you a pointer to the front of the buffer, ready
  *  for writing, and the number of available bytes to write.
  *
- * @param buffer Circular buffer
- * @param availableBytes On output, the number of bytes ready for writing
- * @return Pointer to the first bytes ready for writing, or NULL if buffer is full
  */
 static __inline__ __attribute__((always_inline)) void* TPCircularBufferHead(TPCircularBuffer *buffer, int32_t* availableBytes) {
     *availableBytes = (buffer->length - buffer->fillCount);
@@ -165,8 +153,6 @@ static __inline__ __attribute__((always_inline)) void* TPCircularBufferHead(TPCi
  *
  *  This marks the given section of the buffer ready for reading.
  *
- * @param buffer Circular buffer
- * @param amount Number of bytes to produce
  */
 static __inline__ __attribute__((always_inline)) void TPCircularBufferProduce(TPCircularBuffer *buffer, int32_t amount) {
     buffer->head = (buffer->head + amount) % buffer->length;
@@ -183,10 +169,6 @@ static __inline__ __attribute__((always_inline)) void TPCircularBufferProduce(TP
  *
  *  This copies the given bytes to the buffer, and marks them ready for reading.
  *
- * @param buffer Circular buffer
- * @param src Source buffer
- * @param len Number of bytes in source buffer
- * @return true if bytes copied, false if there was insufficient space
  */
 static __inline__ __attribute__((always_inline)) bool TPCircularBufferProduceBytes(TPCircularBuffer *buffer, const void* src, int32_t len) {
     int32_t space;

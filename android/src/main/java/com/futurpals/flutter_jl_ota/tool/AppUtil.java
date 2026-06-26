@@ -41,20 +41,20 @@ public class AppUtil {
 
 
     /**
-     * 是否具有读取位置权限
+     * Checks whether location permission is granted.
      *
-     * @param context 上下文
-     * @return 结果
+     * @param context Android context.
+     * @return true when permission is granted.
      */
     public static boolean isHasLocationPermission(Context context) {
         return isHasPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
     }
 
     /**
-     * 是否具有读写存储器权限
+     * Checks whether storage permission is granted.
      *
-     * @param context 上下文
-     * @return 结果
+     * @param context Android context.
+     * @return true when permission is granted.
      */
     public static boolean isHasStoragePermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -65,10 +65,10 @@ public class AppUtil {
     }
 
     /**
-     * 检测是否具有蓝牙连接权限
+     * Checks whether Bluetooth connect permission is granted.
      *
-     * @param context 上下文
-     * @return 结果
+     * @param context Android context.
+     * @return true when permission is granted.
      */
     public static boolean checkHasConnectPermission(Context context) {
         if (Build.VERSION.SDK_INT >= 31) {
@@ -78,10 +78,10 @@ public class AppUtil {
     }
 
     /**
-     * 检测是否具有蓝牙连接权限
+     * Checks whether Bluetooth scan permission is granted.
      *
-     * @param context 上下文
-     * @return 结果
+     * @param context Android context.
+     * @return true when permission is granted.
      */
     public static boolean checkHasScanPermission(Context context) {
         if (Build.VERSION.SDK_INT >= 31) {
@@ -91,12 +91,11 @@ public class AppUtil {
     }
 
     /**
-     * 是否具有指定权限
+     * Checks whether the requested permission is granted.
      *
-     * @param context    上下文
-     * @param permission 权限
-     *                   <p>参考{@link Manifest.permission}</p>
-     * @return 结果
+     * @param context    Android context.
+     * @param permission Permission name. See {@link Manifest.permission}.
+     * @return true when permission is granted.
      */
     public static boolean isHasPermission(Context context, String permission) {
         return context != null && ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
@@ -130,7 +129,7 @@ public class AppUtil {
         long currentTime = new Date().getTime();
         if (currentTime - lastClickTime <= interval) {
             clickCount++;
-        } else {//点击时长与上一次不连贯
+        } else { // The click interval is not continuous with the previous click.
             clickCount = 1;
         }
         lastClickTime = currentTime;
@@ -144,7 +143,7 @@ public class AppUtil {
         long currentTime = new Date().getTime();
         if (currentTime - theLastClickTime <= interval) {
             theClickCount++;
-        } else {//点击时长与上一次不连贯
+        } else { // The click interval is not continuous with the previous click.
             theClickCount = 1;
         }
         theLastClickTime = currentTime;
@@ -169,12 +168,12 @@ public class AppUtil {
     }
 
     /**
-     * 清除BLE设备的缓存数据
+     * Clears cached BLE device data.
      *
-     * <p>注意：使用时机：设备断开之后回收资源之前</p>
+     * <p>Call this after the device disconnects and before resources are released.</p>
      *
-     * @param bluetoothGatt 蓝牙Gatt控制对象
-     * @return 结果
+     * @param bluetoothGatt Bluetooth GATT controller.
+     * @return true when the cache refresh succeeds.
      */
     @SuppressLint("MissingPermission")
     public static boolean refreshBleDeviceCache(Context context, BluetoothGatt bluetoothGatt) {
@@ -206,11 +205,11 @@ public class AppUtil {
     }
 
     /**
-     * 获取设备名称
+     * Gets the device name.
      *
-     * @param context 上下文
-     * @param device  设备
-     * @return 设备名称
+     * @param context Android context.
+     * @param device  Bluetooth device.
+     * @return Device name.
      */
     @SuppressLint("MissingPermission")
     public static String getDeviceName(Context context, BluetoothDevice device) {
@@ -221,11 +220,11 @@ public class AppUtil {
     }
 
     /**
-     * 获取设备类型
+     * Gets the device type.
      *
-     * @param context 上下文
-     * @param device  设备
-     * @return 设备类型
+     * @param context Android context.
+     * @param device  Bluetooth device.
+     * @return Device type.
      */
     @SuppressLint("MissingPermission")
     public static int getDeviceType(Context context, BluetoothDevice device) {
@@ -239,11 +238,11 @@ public class AppUtil {
 //    }
 
     /**
-     * 打印BLE的GATT服务信息
+     * Prints BLE GATT service information.
      *
-     * @param device BLE设备
-     * @param gatt   GATT管理对象
-     * @param status 状态
+     * @param device BLE device.
+     * @param gatt   GATT manager.
+     * @param status Discovery status.
      */
     @SuppressLint("MissingPermission")
     public static void printBleGattServices(Context context, BluetoothDevice device, BluetoothGatt gatt, int status) {
@@ -287,10 +286,10 @@ public class AppUtil {
     }
 
     /**
-     * 转换成OTA库的连接状态
+     * Converts Android connection states to OTA SDK connection states.
      *
-     * @param status 连接状态
-     * @return 库的连接状态
+     * @param status Android connection state.
+     * @return OTA SDK connection state.
      */
     public static int changeConnectStatus(int status) {
         int changeStatus = StateCode.CONNECTION_DISCONNECT;

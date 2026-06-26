@@ -1,28 +1,30 @@
 import 'ota_service.dart';
 
 class FlutterJlOta {
-  ///  开始扫描设备
+  /// Starts BLE scanning for OTA-capable devices.
   static Future<bool> startScan() async {
     return OtaService.startScan();
   }
 
-  /// 停止扫描设备
+  /// Stops the current BLE scan.
   static Future<bool> stopScan() async {
     return OtaService.stopScan();
   }
 
-  /// 连接设备
+  /// Connects to a device by iOS UUID or Android MAC address.
   static Future<bool> connectDevice(String uuid, {String? deviceName}) async {
     return OtaService.connectDevice(uuid, deviceName: deviceName);
   }
 
-  /// 获取设备信息
+  /// Queries OTA device information from the native SDK.
   static Future<bool> getDeviceInfo() async {
     return OtaService.getDeviceInfo();
   }
 
-  /// 开始 OTA 升级
-  /// 可以直接执行该方法，会自动连接设备并更新
+  /// Starts an OTA update with a local firmware file path.
+  ///
+  /// The native layer connects to the device when needed before starting the
+  /// update.
   static Future<bool> startOtaUpdate(
     String uuid,
     String filePath, {
@@ -31,27 +33,27 @@ class FlutterJlOta {
     return OtaService.startOtaUpdate(uuid, filePath, deviceName: deviceName);
   }
 
-  /// 是否正在 OTA 升级
+  /// Returns whether the native SDK is currently running an OTA update.
   static Future<bool> isOtaUpdateInProgress() async {
     return OtaService.isOtaUpdateInProgress();
   }
 
-  /// 获取原生 JL OTA SDK 版本
+  /// Returns the native JL OTA SDK version when available.
   static Future<String?> getSdkVersion() async {
     return OtaService.getSdkVersion();
   }
 
-  /// 取消 OTA 升级
+  /// Requests OTA cancellation.
   static Future<bool> cancelOtaUpdate() async {
     return OtaService.cancelOtaUpdate();
   }
 
-  /// 监听 OTA 进度和状态
+  /// Registers the legacy OTA progress callback.
   static void listenToOtaProgress(OtaProgressCallback onProgress) {
     OtaService.listenToOtaProgress(onProgress);
   }
 
-  /// 监听结构化 OTA 进度和状态
+  /// Registers the typed OTA progress callback.
   static void listenToOtaProgressUpdates(
     void Function(OtaProgress) onProgress,
   ) {

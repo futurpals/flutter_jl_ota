@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class OtaPathUtil {
-  /// 获取文件路径(自动拼接)
+  /// Builds a writable local file path for the copied firmware asset.
   static Future<String> getFilePath(
     String fileName, {
     bool isNeedAccountIsolation = false,
