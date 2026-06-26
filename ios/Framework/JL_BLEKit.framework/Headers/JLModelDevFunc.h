@@ -40,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设备是否支持 EQ
 @property (nonatomic, assign) BOOL isSupportDevEQ;
 
+/// 设备是否支持 SPDIF
+@property (nonatomic, assign, readonly) BOOL isSupportSPDIF;
+
+/// 设备是否支持 PC Server
+@property (nonatomic, assign, readonly) BOOL isSupportPCServer;
+
 /// 是否显示不在线的usb 、sd、linein功能
 @property (nonatomic, assign) BOOL isShowOfflineFunc;
 

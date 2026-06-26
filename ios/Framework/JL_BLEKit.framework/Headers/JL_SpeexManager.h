@@ -19,6 +19,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 录音状态代理处理
 @protocol JL_SpeexManagerDelegate <NSObject>
+/// 录音数据回调
+/// - Parameters:
+///   - manager: 操作设备
+///   - data: 数据
+-(void)speexManager:(JL_SpeexManager *)manager Audio:(NSData *)data;
+
+/// 设备端开始录音
+/// - Parameters:
+///   - manager: 操作设备
+///   - param: 录音参数
+-(void)speexManager:(JL_SpeexManager *) manager StartByDeviceWithParam:(JLRecordParams *)param;
+
+/// 设备端结束录音
+/// - Parameters:
+///   - manager: 操作设备
+///   - param: 语音助手配置参数
+-(void)speexManager:(JL_SpeexManager *) manager StopByDeviceWithParam:(JLSpeechRecognition *)param;
+
+/// 录音状态回调
+/// - Parameters:
+///   - manager: 操作设备
+///   - status: 状态
+-(void)speexManager:(JL_SpeexManager *)manager Status:(JL_SpeakType)status;
+
+@optional
 /// 录音状态回调
 /// - Parameters:
 ///   - manager: 操作设备
@@ -26,14 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - originator: 状态变更发起端
 ///   当发起者是Device时，才会具备params的参数，其中结束录音时，params的属性仅有mVadWay为可使用内容
 ///   - params: 录音参数
--(void)speexManager:(JL_SpeexManager *)manager Status:(JL_SpeakType)status By:(JLCMDOriginator)originator With:(JLRecordParams *_Nullable) params;
-
-/// 录音数据回调
-/// - Parameters:
-///   - manager: 操作设备
-///   - data: 数据
--(void)speexManager:(JL_SpeexManager *)manager Audio:(NSData *)data;
-
+-(void)speexManager:(JL_SpeexManager *)manager Status:(JL_SpeakType)status By:(JLCMDOriginator)originator With:(JLRecordParams *_Nullable) params __attribute__((deprecated("Use several other callbacks to implement callback methods")));
 @end
 
 /// 设备录音管理对象
@@ -42,6 +60,16 @@ NS_ASSUME_NONNULL_BEGIN
 //MARK: - Sync Android Interface
 
 @property(nonatomic,weak)id<JL_SpeexManagerDelegate> delegate;
+
+-(instancetype)init __attribute__((unavailable("Use +shareSpeexManager:WithManager: instead.")));
+
+
+/// 获取单例
+/// - Parameters:
+///   - delegate: 代理
+///   - manager: 操作设备
++(JL_SpeexManager *)shareSpeexManager:(id<JL_SpeexManagerDelegate>) delegate WithManager:(JL_ManagerM *)manager;
+
 
 /// 获取录音状态
 -(JL_SpeakType)cmdCheckRecordStatus;

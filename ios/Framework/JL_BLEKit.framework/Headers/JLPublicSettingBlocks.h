@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JL_TypeEnum.h"
+#import <JL_BLEKit/JL_TypeEnum.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,10 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 #define PUBLIC_FUNC_SOURCE              0x0004 //功能使用资源（彩屏舱）
 #define PUBLIC_FUNC_4G                  0x0005 //4G功能升级功能
 #define PUBLIC_TIPS_VOICE               0x0006 //替换提示音
+#define PUBLIC_SDK_INFO                 0x0008 //SDK信息
 
 @class JLPublicBindDeviceModel;
 @class JLPublicSourceInfoModel;
 @class JLPublic4GModel;
+@class JLPublicSDKInfoModel;
 
 /// 屏幕亮度回调
 typedef void(^JLPSScreenLightCbk)(JL_CMDStatus status,uint8_t value);
@@ -38,6 +40,9 @@ typedef void (^JLPSSource4GCbk)(JL_CMDStatus status,JLPublic4GModel *_Nullable m
 
 /// 替换提示音回调
 typedef void(^JLPSTipsVoiceRpCbk)(JL_CMDStatus status,uint8_t op);
+
+/// 设备 SDK 信息回调
+typedef void(^JLPSSDKInfoCbk)(JL_CMDStatus status,JLPublicSDKInfoModel *_Nullable model);
 
 //MARK: - 绑定设备状态(彩屏舱）
 /// 绑定设备状态
@@ -78,6 +83,7 @@ typedef void(^JLPSTipsVoiceRpCbk)(JL_CMDStatus status,uint8_t op);
 /// 功能码
 /// 0x01 屏幕保护程序
 /// 0x02 开机动画
+/// 0x03 墙纸
 @property(nonatomic,assign)uint8_t type;
 
 /// 存储器的句柄
@@ -147,4 +153,30 @@ typedef void(^JLPSTipsVoiceRpCbk)(JL_CMDStatus status,uint8_t op);
 
 @end
 
+// MARK: - 设备 SDK 信息
+
+/// 设备 SDK 信息
+@interface JLPublicSDKInfoModel : NSObject
+
+/// 项目对应 ID
+/// 0x0001 充电仓
+@property(nonatomic,assign)uint16_t projectId;
+
+/// 产品对应 ID
+/// 0x0001 彩屏舱
+@property(nonatomic,assign)uint16_t productId;
+
+/// 芯片 ID
+/// 0x0001 AC701N
+/// 0x0002 AC707N
+@property(nonatomic,assign)uint16_t chipId;
+
+/// 是否支持 gif
+@property(nonatomic,assign)BOOL isSupportGif;
+
+/// 初始化
+/// - Parameter data: 数据
++ (JLPublicSDKInfoModel *)initData:(NSData *)data;
+
+@end
 NS_ASSUME_NONNULL_END

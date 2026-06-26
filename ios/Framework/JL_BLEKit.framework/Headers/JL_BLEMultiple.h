@@ -38,6 +38,7 @@ extern NSString *kJL_BLE_M_ANCS_UPDATE;         //设备ANCS权限变更
 @property (assign, nonatomic) int                  BLE_TIMEOUT;       //连接超时时间
 
 @property (strong, nonatomic) NSMutableArray<JL_EntityM *> *blePeripheralArr;   //发现的设备
+@property (strong, nonatomic) NSArray<CBPeripheral *> *bleAttDevices;      //ATT发现的设备
 @property (strong, nonatomic) NSMutableArray<JL_EntityM *> *bleConnectedArr;    //已连接的设备
 @property (assign, nonatomic) CBManagerState                bleManagerState;    //蓝牙状态
 @property (strong, nonatomic) NSArray<NSNumber *> *__nullable bleDeviceTypeArr;   //选择的设备类型<@(JL_DeviceType)>
@@ -85,6 +86,14 @@ extern NSString *kJL_BLE_M_ANCS_UPDATE;         //设备ANCS权限变更
  */
 -(void)connectEntity:(JL_EntityM*)entity Result:(JL_EntityM_STATUS_BK)result;
 
+
+/// 根据设备 ADV 广播报中的 Mac 连接设备
+/// ADV 的数据格式必须满足 JL 设备的标准 TWS 系列的数据结构
+/// @param advMac 广播报中的蓝牙地址
+/// 一般是指 EDR 地址，当然开发者也可以跟固件端协商，采取其他的地址，但是要求数据结构不变
+/// @param result 回调
+-(void)connectEntityWithAdvMac:(NSString *)advMac Result:(JL_EntityM_STATUS_BK) result;
+
 /// 根据设备Mac去回连
 /// @param mac Mac地址
 /// @param result 回调
@@ -99,6 +108,11 @@ extern NSString *kJL_BLE_M_ANCS_UPDATE;         //设备ANCS权限变更
  更新名字信息
 */
 -(void)updateHistoryRename:(NSString*)name withUuid:(NSString*)uuid;
+
+/// 清除历史记录
+/// 删除后，可能会导致使用历史纪录回连时，信息为空
+/// 一般是在删除了绑定设备后使用
+-(void)cleanHistoryDeviceCache;
 
 /// 获取当前正在连接的entity
 -(JL_EntityM *__nullable)connectingEntity;

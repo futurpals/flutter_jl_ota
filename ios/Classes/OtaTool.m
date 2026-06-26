@@ -12,6 +12,7 @@ static OtaTool *sharedInstance = nil;
 @property(nonatomic, copy) NSString *uuid;
 @property(nonatomic, copy) NSString *filePath;
 @property(nonatomic, copy) void (^otaProgressCallback)(NSInteger progress, NSString *status);
+@property(nonatomic, assign) BOOL otaInProgress;
 
 @end
 
@@ -50,6 +51,10 @@ static OtaTool *sharedInstance = nil;
     [[JLBleManager sharedInstance] startScanBLE];
 }
 
+- (void)stopScan {
+    [[JLBleManager sharedInstance] stopScanBLE];
+}
+
 - (void)connectDeviceWithUUID:(NSString *)uuid {
     self.uuid = uuid;
     [[JLBleManager sharedInstance] connectPeripheralWithUUID:uuid];
@@ -68,6 +73,7 @@ static OtaTool *sharedInstance = nil;
 - (void)startOtaWithUuid:(NSString *)uuid filePath:(NSString *)filePath {
     self.uuid = uuid;
     self.filePath = filePath;
+    self.otaInProgress = YES;
 
     if (![[JLBleManager sharedInstance] isConnected]) {
         [[JLBleManager sharedInstance] connectPeripheralWithUUID:uuid];
@@ -84,6 +90,7 @@ static OtaTool *sharedInstance = nil;
         if (self.otaProgressCallback) {
             self.otaProgressCallback(0, status == 0 ? @"Cancelled" : @"CancelFailed");
         }
+        self.otaInProgress = NO;
     }];
 }
 
@@ -91,6 +98,15 @@ static OtaTool *sharedInstance = nil;
 
 *))callback {
     _otaProgressCallback = [callback copy];
+}
+
+- (BOOL)isOtaUpdateInProgress {
+    return self.otaInProgress;
+}
+
+- (NSString *)sdkVersion {
+    NSString *sdkVersion = [JL_OTAManager logSDKVersion];
+    return sdkVersion ?: @"";
 }
 
 #pragma mark - 初始化与通知
@@ -155,6 +171,7 @@ static OtaTool *sharedInstance = nil;
             case JL_OTAResultSuccess:
                 NSLog(@"--->升级成功.");
                 intProgress = 100;
+                self.otaInProgress = NO;
                 break;
             case JL_OTAResultPrepared:
                 NSLog(@"---> 检验文件【完成】");
@@ -170,6 +187,10 @@ static OtaTool *sharedInstance = nil;
                 break;
             case JL_OTAResultFail:
             case JL_OTAResultFailCmdTimeout:
+                self.otaInProgress = NO;
+                break;
+            case JL_OTAResultCancel:
+                self.otaInProgress = NO;
                 break;
             default:
                 break;

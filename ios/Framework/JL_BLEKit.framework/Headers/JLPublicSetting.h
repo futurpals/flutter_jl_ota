@@ -49,6 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
 ///     0x01 开始推送
 -(void)publicSettingReplaceTipsVoiceStatus:(JL_ManagerM *)manager Model:(uint8_t )model Reason:(NSError *_Nullable)err;
 
+///
+/// - Parameters:
+///   - manager: 设备
+///   - mode: 设备 SDK 信息
+-(void)publicSettingDeviceSDKMessage:(JL_ManagerM *)manager Mode:(JLPublicSDKInfoModel *_Nullable)mode;
+
 @end
 
 
@@ -98,6 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - funcType: 功能码
 ///   0x01 屏幕保护程序
 ///   0x02 开机动画
+///   0x03 墙纸
 ///   - block: 回调
 -(void)cmdDeviceFuncUsedSourceGet:(JL_ManagerM *)manager Type:(uint8_t)funcType result:(JLPSSourceInfoCbk)block;
 
@@ -115,6 +122,14 @@ NS_ASSUME_NONNULL_BEGIN
 ///   - info: 提示音包 tone.cfg 信息
 ///   - block: 状态回调
 -(void)cmdDeviceReplaceTipsVoiceStart:(JL_ManagerM *)manager  Info:(JLPublicTipsVoiceRpInfo *)info result:(JLPSTipsVoiceRpCbk)block;
+
+
+/// 获取设备 SDK 信息
+/// - Parameters:
+///   - manager: 设备
+///   - block: 回调
+-(void)cmdDeviceGetDeviceSDKInfo:(JL_ManagerM *)manager result:(JLPSSDKInfoCbk)block;
+
 @end
 
 NS_ASSUME_NONNULL_END

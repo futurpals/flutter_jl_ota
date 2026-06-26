@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_jl_ota'
-  s.version          = '1.0.1'
+  s.version          = '1.0.4'
   s.summary          = 'A Flutter plugin for Over-The-Air (OTA) firmware updates targeting JL chipsets.'
   s.description      = <<-DESC
 A Flutter plugin for Over-The-Air (OTA) firmware updates targeting JL (JieLi) chipsets. Supports Android and iOS platforms with progress callbacks and error handling.
@@ -20,6 +20,9 @@ A Flutter plugin for Over-The-Air (OTA) firmware updates targeting JL (JieLi) ch
   s.static_framework = true
 
   s.framework = 'CoreBluetooth'
+  s.resource_bundles = {
+    'flutter_jl_ota_privacy' => ['Resources/PrivacyInfo.xcprivacy']
+  }
 
   s.ios.vendored_frameworks = [
     'Framework/JL_OTALib.framework',

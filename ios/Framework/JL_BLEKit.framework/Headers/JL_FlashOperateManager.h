@@ -28,6 +28,7 @@ typedef NS_ENUM(UInt8, JL_FlashOperationOPType) {
     JL_FlashOperationOPTypeRestoreSystem         = 0x0A, //还原系统
     JL_FlashOperationOPTypeGetFileInfo           = 0x0B, //获取文件信息
     JL_FlashOperationOPTypeGetRemainingSpace     = 0x0C, //获取剩余空间
+    JL_FlashOperationOpTypeGetSourceStorageInfo  = 0x0D, //获取源存储信息
 };
 
 typedef NS_ENUM(UInt8, JL_DialSetting) {
@@ -178,6 +179,11 @@ extern NSString *kJL_MANAGER_WATCH_FACE;
 
 #pragma mark ---> 外挂Flash 剩余空间
 -(void)cmdFlashLeftSizeResult:(JL_FlashLeftSize_BK)result;
+
+/// 获取资源存储空间
+/// 例如：res_space= 8192 (Kb), 即realSize = res_space* 1024= 8192 * 1024 = 8Mb
+/// - Parameter result: 回复
+-(void)cmdFlashGetSourceStorageInfo:(JL_FlashLeftSize_BK)result;
 @end
 
 NS_ASSUME_NONNULL_END

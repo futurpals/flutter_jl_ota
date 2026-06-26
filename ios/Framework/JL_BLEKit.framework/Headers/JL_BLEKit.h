@@ -21,6 +21,7 @@ FOUNDATION_EXPORT const unsigned char JL_BLEKitVersionString[];
 #import <JL_BLEKit/JL_BLEAction.h>
 #import <JL_BLEKit/JL_vad.h>
 #import <JL_BLEKit/JL_TypeEnum.h>
+#import <JL_BLEKit/JLTaskChain.h>
 
 #import <JL_BLEKit/JLModel_Device.h>
 #import <JL_BLEKit/JLModel_RTC.h>
@@ -56,6 +57,11 @@ FOUNDATION_EXPORT const unsigned char JL_BLEKitVersionString[];
 #import <JL_BLEKit/JL_AlarmClockManager.h>
 #import <JL_BLEKit/JL_LightManager.h>
 #import <JL_BLEKit/JL_TwsManager.h>
+#import <JL_BLEKit/JLTwsSupportFuncs.h>
+#import <JL_BLEKit/JLTranslateSet.h>
+#import <JL_BLEKit/JLTranslateAudio.h>
+#import <JL_BLEKit/JLTranslateSetMode.h>
+#import <JL_BLEKit/JLTranslationManager.h>
 #import <JL_BLEKit/JL_SoundCardManager.h>
 #import <JL_BLEKit/JL_LrcManager.h>
 #import <JL_BLEKit/JL_SpeexManager.h>
@@ -109,5 +115,9 @@ FOUNDATION_EXPORT const unsigned char JL_BLEKitVersionString[];
 #import <JL_BLEKit/JLDeviceConfigTws.h>
 #import <JL_BLEKit/JLDialInfoExtentedModel.h>
 #import <JL_BLEKit/JLDialInfoExtentManager.h>
-
+#import <JL_BLEKit/JLModelSpdif.h>
+#import <JL_BLEKit/JLModelPCServer.h>
+#import <JL_BLEKit/JLSpdifPCManager.h>
+#import <JL_BLEKit/JLFlashOpMgr.h>
+#import <JL_BLEKit/JLTipsSoundReplaceMgr.h>
 

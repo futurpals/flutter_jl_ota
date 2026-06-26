@@ -40,6 +40,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// 屏幕尺寸
+@interface JLDialSize : NSObject
+
+/// width
+@property(nonatomic,assign) uint16_t width;
+
+/// height
+@property(nonatomic,assign) uint16_t height;
+
+/// 初始化
+/// - Parameters:
+///   - width: width
+///   - height: height
++(JLDialSize *)makeSize:(uint16_t)width Height:(uint16_t)height;
+
+@end
+
 //MARK: - JLAiManager
 @class JL_ManagerM;
 @class JLAiManager;

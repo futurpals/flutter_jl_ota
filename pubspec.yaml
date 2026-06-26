@@ -1,6 +1,6 @@
 name: flutter_jl_ota
 description: "A Flutter plugin for Over-The-Air (OTA) firmware updates targeting JL (JieLi) chipsets. Supports Android and iOS platforms with progress callbacks and error handling."
-version: 1.0.3
+version: 1.0.4
 homepage: "https://github.com/futurpals/flutter_jl_ota"
 repository: "https://github.com/futurpals/flutter_jl_ota"
 issue_tracker: "https://github.com/futurpals/flutter_jl_ota/issues"

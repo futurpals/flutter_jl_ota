@@ -64,10 +64,10 @@ blePeripheralArr;
         _bleManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
 
         /*--- JLSDK ADD ---*/
-        _otaManager = [[JL_OTAManager alloc] init];
+        _otaManager = [JL_OTAManager getOTAManager];
         [JL_OTAManager logSDKVersion];
         [JLHashHandler sdkVersion];
-        //[_otaManager logSendData:true];
+        [_otaManager logSendData:false];
 
         _otaManager.delegate = self;
 
@@ -590,7 +590,6 @@ nullable NSError
 
 
 @end
-
 
 
 

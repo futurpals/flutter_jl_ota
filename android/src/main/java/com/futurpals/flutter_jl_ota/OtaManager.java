@@ -54,6 +54,15 @@ public class OtaManager extends BluetoothOTAManager {
         }
     }
 
+    public void stopLeScan() {
+        try {
+            bleManager.stopLeScan();
+            Log.d(TAG, "Stopped BLE scan");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to stop BLE scan: " + e.getMessage(), e);
+        }
+    }
+
     // 注册 BLE 事件回调
     private void registerBleEventCallback() {
         bleManager.registerBleEventCallback(new BleEventCallback() {

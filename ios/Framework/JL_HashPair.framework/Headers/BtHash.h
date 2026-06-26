@@ -2,8 +2,7 @@
 //  BtHash.h
 //  BtHash
 //
-//  Created by huanghaibo on 2019/7/28.
-//  Copyright © 2019 jieli. All rights reserved.
+//  Created by EzioChan on 2022/6/29.
 //
 
 #import <Foundation/Foundation.h>
@@ -22,4 +21,5 @@
                     andKey: (unsigned char *)key
                  andKeyLen: (int)keylen
                     andMac:(unsigned char *)mac;
+
 @end

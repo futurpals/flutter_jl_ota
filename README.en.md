@@ -18,8 +18,8 @@ Android and iOS platforms with progress callbacks and error handling.
 
 Integrated with the latest JL OTA plugin package
 
-* Android SDK V1.10.0
-* IOS SDK V2.3.1
+* Android SDK `jl_bt_ota_V1.10.0_10932`
+* iOS SDK `JL_OTALib 2.3.1` / `JL_BLEKit 1.13.0` / `JL_AdvParse 1.1.1` / `JL_HashPair 1.0.2`
 
 [Jieli OTA Android Official GitHub repository](https://github.com/Jieli-Tech/Android-JL_OTA)
 [Jieli OTA IOS Official GitHub repository](https://github.com/Jieli-Tech/iOS-JL_OTA)
@@ -30,7 +30,39 @@ Integrated with the latest JL OTA plugin package
 
 ```yaml
 dependencies:
-  flutter_jl_ota: ^1.0.3
+  flutter_jl_ota: ^1.0.4
+```
+
+## API
+
+```dart
+await FlutterJlOta.startScan();
+await FlutterJlOta.stopScan();
+await FlutterJlOta.connectDevice(deviceUuid, deviceName: 'JL_Device');
+await FlutterJlOta.startOtaUpdate(deviceUuid, ufwPath, deviceName: 'JL_Device');
+await FlutterJlOta.cancelOtaUpdate();
+
+final isUpdating = await FlutterJlOta.isOtaUpdateInProgress();
+final sdkVersion = await FlutterJlOta.getSdkVersion();
+```
+
+The legacy progress callback is still supported:
+
+```dart
+FlutterJlOta.listenToOtaProgress((progress, status) {
+  print('OTA Progress: $progress%, Status: $status');
+});
+```
+
+You can also use the structured progress object:
+
+```dart
+FlutterJlOta.listenToOtaProgressUpdates((event) {
+  print('OTA Progress: ${event.progress}%, Status: ${event.status}');
+  if (event.isCompleted || event.isError) {
+    // Handle completion or failure.
+  }
+});
 ```
 
 ## Example
@@ -74,21 +106,21 @@ class _MyAppState extends State<MyApp> {
   }
 
   void startOta() async {
-    String deviceUuid = '2B3681AF-B077-297D-D291-FA4A908CE06A'; // 替换为实际 UUID
+    String deviceUuid = '2B3681AF-B077-297D-D291-FA4A908CE06A'; // Replace with the actual UUID
     print("flutter_ota_log => ${'startOta 执行了'}");
     String ufwPath = await moveFileToLib();
     await OtaService.startOtaUpdate(deviceUuid, ufwPath);
 
-    // 监听进度和状态
-    OtaService.listenToOtaProgress((progress, status) {
-      print('OTA Progress: $progress%, Status: $status');
-      if (status == 'Failed' || status == 'Success') {
-        // 可选择取消监听或执行其他逻辑
+    // Listen for progress and state.
+    OtaService.listenToOtaProgressUpdates((event) {
+      print('OTA Progress: ${event.progress}%, Status: ${event.status}');
+      if (event.isCompleted || event.isError) {
+        // Optionally stop listening or run follow-up logic.
       }
     });
   }
 
-  /// 调试用
+  /// Debug helper.
   static moveFileToLib() async {
     String fileName = 'update.ufw';
 

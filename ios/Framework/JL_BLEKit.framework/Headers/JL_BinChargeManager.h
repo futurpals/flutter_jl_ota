@@ -87,6 +87,11 @@ extern NSString *kJL_MANAGER_ID3_PlayPush;
 -(void)cmdID3_PushEnable:(BOOL)enable;
 
 #pragma mark ---> 设置高低音 [-12,+12]
+
+/// 设置高低音
+/// - Parameters:
+///   - p_low: 低音 (-12,12)
+///   - p_high: 高音 (-12,12)
 -(void)cmdSetLowPitch:(int)p_low HighPitch:(int)p_high;
 
 #pragma mark ---> 设置混响值[深度和强度][0,100]、限幅值[-60,0]

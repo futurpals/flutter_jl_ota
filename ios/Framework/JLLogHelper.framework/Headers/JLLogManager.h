@@ -35,6 +35,13 @@ typedef NS_ENUM(NSInteger, JLLOG_LEVEL) {
  */
 +(void)openLogTextFile;
 
+///重定向保存日志文件路径设置
+/// @param path 路径
++(void)redirectLogPath:(NSString *)path;
+
+/// 收集日志回调接口
+/// @param block 回调
++(void)collectLog:(void(^)(NSString *log))block;
 
 /// 打印时间
 /// @param isTimeStamp 是否打印 default is false

@@ -18,8 +18,8 @@
 
 与最新的JL OTA插件包集成
 
-* 安卓 SDK V1.10.0
-* IOS SDK V2.3.1
+* 安卓 SDK `jl_bt_ota_V1.10.0_10932`
+* iOS SDK `JL_OTALib 2.3.1` / `JL_BLEKit 1.13.0` / `JL_AdvParse 1.1.1` / `JL_HashPair 1.0.2`
 
 [Android杰理官方github仓库地址](https://github.com/Jieli-Tech/Android-JL_OTA)
 [IOS杰理官方github仓库地址](https://github.com/Jieli-Tech/iOS-JL_OTA)
@@ -30,7 +30,39 @@
 
 ```yaml
 dependencies:
-  flutter_jl_ota: ^1.0.3
+  flutter_jl_ota: ^1.0.4
+```
+
+## API
+
+```dart
+await FlutterJlOta.startScan();
+await FlutterJlOta.stopScan();
+await FlutterJlOta.connectDevice(deviceUuid, deviceName: 'JL_Device');
+await FlutterJlOta.startOtaUpdate(deviceUuid, ufwPath, deviceName: 'JL_Device');
+await FlutterJlOta.cancelOtaUpdate();
+
+final isUpdating = await FlutterJlOta.isOtaUpdateInProgress();
+final sdkVersion = await FlutterJlOta.getSdkVersion();
+```
+
+兼容旧回调：
+
+```dart
+FlutterJlOta.listenToOtaProgress((progress, status) {
+  print('OTA Progress: $progress%, Status: $status');
+});
+```
+
+也可以使用结构化进度对象：
+
+```dart
+FlutterJlOta.listenToOtaProgressUpdates((event) {
+  print('OTA Progress: ${event.progress}%, Status: ${event.status}');
+  if (event.isCompleted || event.isError) {
+    // 处理升级完成或失败
+  }
+});
 ```
 
 ## 例子
@@ -80,9 +112,9 @@ class _MyAppState extends State<MyApp> {
     await OtaService.startOtaUpdate(deviceUuid, ufwPath);
 
     // 监听进度和状态
-    OtaService.listenToOtaProgress((progress, status) {
-      print('OTA Progress: $progress%, Status: $status');
-      if (status == 'Failed' || status == 'Success') {
+    OtaService.listenToOtaProgressUpdates((event) {
+      print('OTA Progress: ${event.progress}%, Status: ${event.status}');
+      if (event.isCompleted || event.isError) {
         // 可选择取消监听或执行其他逻辑
       }
     });

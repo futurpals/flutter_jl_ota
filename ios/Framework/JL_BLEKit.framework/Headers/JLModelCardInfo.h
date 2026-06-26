@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <JL_BLEKit/JLModel_File.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 0x04 lineIn
 /// 0x05 flash2
 /// 0x06 flash3
+/// 0x07 ReservedArea
 @property(nonatomic,assign)uint8_t type;
 
 /// 是否在线
@@ -60,6 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// flash 3 在线状态
 @property (nonatomic, assign) BOOL flash3Online;
 
+/// ReservedArea 在线状态
+@property (nonatomic, assign) BOOL reservedAreaOnline;
+
 /// 是否处于设备复用状态
 @property (nonatomic, assign) BOOL isComplex;
 
@@ -81,6 +86,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// flash3 句柄
 @property (nonatomic, copy)NSData *flash3Handle;
 
+/// ReservedArea 句柄
+@property (nonatomic, copy)NSData *reservedAreaHandle;
+
 /// 卡在线数组信息
 @property (nonatomic, strong)NSArray <JLCardInfo *> *cardInfos;
 
@@ -88,6 +96,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否具备存储卡在线
 -(BOOL)hasStorageCard;
+
+/// 获取存储卡句柄
+/// - Parameter cardType: 存储卡类型
+-(NSData *_Nullable)getCardHandle:(JL_CardType)cardType;
 
 @end
 

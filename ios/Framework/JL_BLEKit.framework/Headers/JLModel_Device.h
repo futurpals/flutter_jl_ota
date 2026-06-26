@@ -53,6 +53,9 @@ typedef NS_ENUM(UInt8, JL_FunctionCode) {
     JL_FunctionCodeFM               = 4,    //FM
     JL_FunctionCodeLIGHT            = 5,    //LIGHT
     JL_FunctionCodeFMTX             = 6,    //发射频点
+    JL_FunctionCodeEQ               = 7,    //EQ
+    JL_FunctionCodeSPDIF            = 8,    //SPDIF
+    JL_FunctionCodePCServer         = 9,    //PCServer
     JL_FunctionCodeCOMMON           = 0xff, //通用
 };
 
@@ -185,6 +188,7 @@ typedef NS_ENUM(UInt8, JL_FileHandleType) {     //文件句柄
     JL_FileHandleTypeLineIn               = 4,    //LineIn
     JL_FileHandleTypeFLASH2               = 5,    //FLASH2
     JL_FileHandleTypeFLASH3               = 6,    //FLASH3
+    JL_FileHandleTypeReservedArea         = 7,    //ReservedArea
 };
 
 typedef NS_ENUM(UInt8, JL_MusicMode) {
@@ -286,7 +290,7 @@ typedef NS_ENUM(UInt8,JL_ReverberationType) {
 @property (assign,nonatomic) JL_DeviceBTStatus  btStatus;
 
 ///BIT(0):BT BIT(1):MUSIC BIT(2):RTC
-@property (assign,nonatomic) uint32_t           function;
+@property (assign,nonatomic) uint32_t           function __deprecated_msg("已过时，可使用deviceFuncs");
 
 ///当前处于的模式
 @property (assign,nonatomic) JL_FunctionCode    currentFunc;
@@ -301,16 +305,25 @@ typedef NS_ENUM(UInt8,JL_ReverberationType) {
 @property (copy,  nonatomic) NSString           *versionUBoot;
 
 ///设备单、双备份
-@property (assign,nonatomic) JL_Partition       partitionType;
+@property (assign,nonatomic) JL_Partition       partitionType __deprecated_msg("已过时，可使用JL_OTAManager");
+
+
+/// 是否支持复用空间进行 OTA
+@property (assign,nonatomic) BOOL               isSupportReuseSpaceOTA __deprecated_msg("已过时，可使用JL_OTAManager");
+
 
 ///OTA状态
-@property (assign,nonatomic) JL_OtaStatus       otaStatus;
+@property (assign,nonatomic) JL_OtaStatus       otaStatus __deprecated_msg("已过时，可使用JL_OTAManager");
 
 ///耳机单备份 是否需要强制升级
-@property (assign,nonatomic) JL_OtaHeadset      otaHeadset;
+@property (assign,nonatomic) JL_OtaHeadset      otaHeadset __deprecated_msg("已过时，可使用JL_OTAManager");
 
 ///手表资源 是否需要强制升级
-@property (assign,nonatomic) JL_OtaWatch        otaWatch;
+@property (assign,nonatomic) JL_OtaWatch        otaWatch __deprecated_msg("已过时，可使用JL_OTAManager");
+
+///资源是否需要强制升级
+@property (assign,nonatomic) JLOtaSourcesExtendMode   otaSourceMode __deprecated_msg("已过时，可使用JL_OTAManager");
+
 
 ///厂商ID
 @property (copy,  nonatomic) NSString           *pidvid;
@@ -407,6 +420,8 @@ typedef NS_ENUM(UInt8,JL_ReverberationType) {
 /*--- File INFO ---*/
 ///当前文件传输句柄
 @property (assign,nonatomic) JL_FileHandleType        currentFileHandleType;
+///当前文件所存放的位置
+@property (assign,nonatomic,readonly) JL_CardType     currentCardType;
 ///文件分包传输是否支持crc16方式
 @property (assign,nonatomic) JL_FileSubcontractTransferCrc16Type fileSubcontractTransferCrc16Type;
 ///是否以新的方式读取固件文件
@@ -611,8 +626,8 @@ typedef NS_ENUM(UInt8,JL_ReverberationType) {
 
 
 -(void)cleanMe;
-+(void)observeModelProperty:(NSString*)prty Action:(SEL)action Own:(id)own;
-+(void)removeModelProperty:(NSString*)prty Own:(id)own;
++(void)observeModelProperty:(NSString*)prty Action:(SEL)action Own:(id)own __attribute__((deprecated("This method has been abandoned. You can use the system's KVO to monitor object changes.")));
++(void)removeModelProperty:(NSString*)prty Own:(id)own __attribute__((deprecated("This method has been abandoned. You can use the system's KVO to monitor object changes.")));
 
 #pragma mark ---> 设备信息
 -(void)deviceInfoData:(NSData*)infoData;

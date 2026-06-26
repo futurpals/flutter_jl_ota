@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <JL_BLEKit/JL_TypeEnum.h>
 #import <JL_BLEKit/JL_FileManager.h>
+#import <JL_BLEKit/JLAiManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
 @class JL_ManagerM;
@@ -51,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 缩略图尺寸 默认 200*200
 /// scale zoom size default 200*200
-@property (nonatomic,assign) CGSize scaleZoomSize;
+@property (nonatomic, strong) JLDialSize *scaleZoomSize;
 
 
 /// 代理

@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param to 长度
 -(NSData *)subf:(NSInteger)from t:(NSInteger)to;
 
-
+-(uint16_t)crc:(uint16_t)baseCrc;
 
 @end
 

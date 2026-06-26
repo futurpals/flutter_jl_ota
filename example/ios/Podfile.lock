@@ -1,12 +1,9 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_jl_ota (0.0.1):
+  - flutter_jl_ota (1.0.4):
     - Flutter
   - integration_test (0.0.1):
     - Flutter
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - permission_handler_apple (9.3.0):
     - Flutter
 
@@ -14,7 +11,6 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_jl_ota (from `.symlinks/plugins/flutter_jl_ota/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 EXTERNAL SOURCES:
@@ -24,16 +20,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_jl_ota/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
-  path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_jl_ota: 63d5a6ee164d11f52dc000821daf4790a9885283
+  flutter_jl_ota: 96b96e58a76ee7b8e5518ddf67566948d1124fc2
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e

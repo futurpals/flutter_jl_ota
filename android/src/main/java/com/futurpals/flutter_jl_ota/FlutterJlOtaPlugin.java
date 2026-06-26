@@ -1,17 +1,17 @@
 package com.futurpals.flutter_jl_ota;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.futurpals.flutter_jl_ota.tool.ConfigHelper;
-import com.jieli.jl_bt_ota.constant.StateCode;
-import com.jieli.jl_bt_ota.interfaces.BtEventCallback;
+import com.jieli.jl_bt_ota.constant.JL_Constant;
 import com.jieli.jl_bt_ota.interfaces.IActionCallback;
 import com.jieli.jl_bt_ota.interfaces.IUpgradeCallback;
 import com.jieli.jl_bt_ota.model.BluetoothOTAConfigure;
@@ -19,6 +19,7 @@ import com.jieli.jl_bt_ota.model.base.BaseError;
 import com.jieli.jl_bt_ota.model.response.TargetInfoResponse;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -38,9 +39,8 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
     private static final String TAG = "FlutterJlOtaPlugin";
     private MethodChannel channel;
     private Context context;
-    private Activity activity;
     private OtaManager otaManager;
-    public int connectedCounts = 0;
+    private boolean otaStartRequested = false;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -52,22 +52,18 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        activity = binding.getActivity();
     }
 
     @Override
     public void onDetachedFromActivityForConfigChanges() {
-        activity = null;
     }
 
     @Override
     public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-        activity = binding.getActivity();
     }
 
     @Override
     public void onDetachedFromActivity() {
-        activity = null;
     }
 
     @Override
@@ -82,24 +78,42 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
     @SuppressLint("MissingPermission")
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-            result.error("BLUETOOTH_NOT_AVAILABLE", "Bluetooth is not available or not enabled", null);
-            return;
-        }
-
         switch (call.method) {
             case "getPlatformVersion":
                 result.success("Android " + android.os.Build.VERSION.RELEASE);
                 break;
 
+            case "getSdkVersion":
+                result.success(String.format(
+                        Locale.US,
+                        "V%s(%d)",
+                        JL_Constant.getLibVersionName(),
+                        JL_Constant.getLibVersionCode()
+                ));
+                break;
+
+            case "isOta":
+                result.success(otaManager != null && otaManager.isOTA());
+                break;
+
             case "startScan":
+                if (!ensureBluetoothAvailable(result)) return;
                 initOtaManagerIfNeeded("", ""); // 初始化时无需特定 UUID 和名称
                 otaManager.startLeScan(20 * 1000L); // 20秒超时
                 result.success(true);
                 break;
 
+            case "stopScan":
+                if (otaManager == null) {
+                    result.success(false);
+                    return;
+                }
+                otaManager.stopLeScan();
+                result.success(true);
+                break;
+
             case "connectDevice":
+                if (!ensureBluetoothAvailable(result)) return;
                 String uuid = call.argument("uuid");
                 String deviceName = call.argument("deviceName");
                 if (uuid != null && !uuid.isEmpty()) {
@@ -117,6 +131,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
                 break;
 
             case "getDeviceInfo":
+                if (!ensureBluetoothAvailable(result)) return;
                 if (otaManager == null) {
                     result.error("NOT_INITIALIZED", "OTA manager not initialized", null);
                     return;
@@ -137,6 +152,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
                 break;
 
             case "startOtaUpdate":
+                if (!ensureBluetoothAvailable(result)) return;
                 String otaUuid = call.argument("uuid");
                 String filePath = call.argument("filePath");
                 String otaDeviceName = call.argument("deviceName");
@@ -149,6 +165,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
                 break;
 
             case "cancelOtaUpdate":
+                if (!ensureBluetoothAvailable(result)) return;
                 if (otaManager == null) {
                     result.error("NOT_INITIALIZED", "OTA manager not initialized", null);
                     return;
@@ -161,6 +178,15 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
                 result.notImplemented();
                 break;
         }
+    }
+
+    private boolean ensureBluetoothAvailable(@NonNull Result result) {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            result.error("BLUETOOTH_NOT_AVAILABLE", "Bluetooth is not available or not enabled", null);
+            return false;
+        }
+        return true;
     }
 
     // 初始化 OtaManager，如果尚未初始化或需要更新 UUID
@@ -193,42 +219,27 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
 
     // 开始 OTA 升级
     private void startOtaUpdate(String uuid, String filePath, Result result) {
+        otaStartRequested = false;
         otaManager.setOtaStatusCallback(new OtaStatusCallback() {
             @Override
             public void onCanStartOtaChanged(boolean canStartOta) {
-                if (canStartOta) {
-                    otaManager.registerBluetoothCallback(new BtEventCallback() {
-                        @Override
-                        public void onConnection(BluetoothDevice device, int status) {
-                            connectedCounts++;
-                            if (status == StateCode.CONNECTION_OK) {
-                                if (otaManager.isOTA()) return;
-                                Log.e(TAG, "start-> ota:" + device + ",status==" + status);
+                if (!canStartOta || otaStartRequested || otaManager.isOTA()) return;
 
-                                if (connectedCounts >= 2) {
-                                    startOtaWithFile(filePath);
-                                }
+                otaStartRequested = true;
+                Log.d(TAG, "OTA connection is ready, starting upgrade for: " + uuid);
+                startOtaWithFile(filePath);
 
-                                otaManager.queryMandatoryUpdate(new IActionCallback<>() {
-                                    @Override
-                                    public void onSuccess(TargetInfoResponse deviceInfo) {
-                                        Log.e("queryMandatoryUpdate", "强制升级 onSuccess");
-                                    }
+                otaManager.queryMandatoryUpdate(new IActionCallback<TargetInfoResponse>() {
+                    @Override
+                    public void onSuccess(TargetInfoResponse deviceInfo) {
+                        Log.d(TAG, "queryMandatoryUpdate success");
+                    }
 
-                                    @Override
-                                    public void onError(BaseError baseError) {
-                                        Log.e("queryMandatoryUpdate", "强制升级error->" + baseError);
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onError(BaseError error) {
-                            Log.e(TAG, "Bluetooth callback error: " + error.getMessage());
-                        }
-                    });
-                }
+                    @Override
+                    public void onError(BaseError baseError) {
+                        Log.e(TAG, "queryMandatoryUpdate error: " + baseError);
+                    }
+                });
             }
         });
         result.success(true);
@@ -241,7 +252,6 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
             @Override
             public void onStartOTA() {
                 Log.d(TAG, "OTA started");
-                connectedCounts = 0;
                 invokeProgress(0, "STARTED");
             }
 
@@ -265,6 +275,7 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
             public void onStopOTA() {
                 Log.d(TAG, "OTA completed");
                 invokeProgress(100, "COMPLETED");
+                otaStartRequested = false;
                 otaManager.release();
             }
 
@@ -274,12 +285,14 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
                 if (otaManager.isOTA()) {
                     otaManager.cancelOTA();
                 }
+                otaStartRequested = false;
                 invokeProgress(0, "CANCELED");
             }
 
             @Override
             public void onError(BaseError error) {
                 Log.e(TAG, "OTA error: " + error.getMessage());
+                otaStartRequested = false;
                 invokeProgress(0, "ERROR: " + error.getMessage());
             }
         });
@@ -288,14 +301,12 @@ public class FlutterJlOtaPlugin implements FlutterPlugin, MethodCallHandler, Act
 
     // 通过 MethodChannel 发送进度更新
     private void invokeProgress(int progress, String status) {
-        if (activity != null) {
-            activity.runOnUiThread(() -> {
-                Map<String, Object> response = new HashMap<>();
-                response.put("progress", progress);
-                response.put("status", status);
-                channel.invokeMethod("otaProgress", response);
-            });
-        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Map<String, Object> response = new HashMap<>();
+            response.put("progress", progress);
+            response.put("status", status);
+            channel.invokeMethod("otaProgress", response);
+        });
     }
 
     @SuppressLint("MissingPermission")

@@ -18,3 +18,5 @@ FOUNDATION_EXPORT const unsigned char JL_OTALibVersionString[];
 #import <JL_OTALib/JL_OTAManager.h>
 #import <JL_OTALib/jl_ufw.h>
 #import <JL_OTALib/JLOTAFile.h>
+#import <JL_OTALib/JLOtaReConnectOption.h>
+#import <JL_OTALib/JLOtaCustom.h>

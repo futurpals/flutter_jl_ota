@@ -44,6 +44,7 @@ typedef void(^ATC_Block)(BOOL ret);
  */
 -(void)bluetoothPairingKey:(NSData *__nullable)pKey Result:(ATC_Block)bk;
 -(void)inputPairData:(NSData*)rData;
+-(void)cancelPair;
 
 #pragma mark - 蓝牙根据广播包回连
 

@@ -12,11 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance;
 
 - (void)startScan;
+- (void)stopScan;
 - (void)connectDeviceWithUUID:(NSString *)uuid;
 - (void)getDeviceInfo:(void (^)(BOOL needForcedUpgrade))callback;
 - (void)startOtaWithUuid:(NSString *)uuid filePath:(NSString *)filePath;
 - (void)cancelOtaUpdate:(void (^)(uint8_t status))completion;
 - (void)setOtaProgressCallback:(void (^)(NSInteger progress, NSString *status))callback;
+- (BOOL)isOtaUpdateInProgress;
+- (NSString *)sdkVersion;
 
 @end
 

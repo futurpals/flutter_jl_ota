@@ -51,6 +51,8 @@ typedef NS_ENUM(UInt8, JL_FlashSystemType) {
 /// 屏幕高度
 @property(assign,nonatomic)uint16_t         mScreenHeight;
 
++(JLModel_Flash*)modelWithFlash:(NSData *)flashData;
+
 @end
 
 NS_ASSUME_NONNULL_END
